@@ -534,7 +534,7 @@ async function downloadExport(url){
     // tunnel, où tout arrive en application/json.
     const cd = r.headers.get('Content-Disposition') || '';
     const m = cd.match(/filename="([^"]+)"/);
-    const name = m ? m[1] : 'ajean-conversation.' + (url.includes('format=json') ? 'json' : 'md');
+    const name = m ? m[1] : 'actelyo-conversation.' + (url.includes('format=json') ? 'json' : 'md');
     // ⚠️ blobURL, surtout pas `url` : ce nom est déjà celui du paramètre, et le
     // redéclarer ici mettrait la ligne `jfetch(url)` ci-dessus dans la zone morte
     // du const — l'export échouerait avant même de partir.

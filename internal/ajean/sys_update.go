@@ -24,7 +24,7 @@ import (
 // l'OS/arch courant, remplace le binaire en place, puis affiche quoi redémarrer.
 // AUCUN redémarrage de service automatique (choix volontaire, plus sûr).
 
-const updateRepo = "nathaninline/ajean"
+const updateRepo = "jeanneretsamy-ux/ajeanactelyo"
 
 type ghRelease struct {
 	TagName string `json:"tag_name"`

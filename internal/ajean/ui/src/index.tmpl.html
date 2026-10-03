@@ -38,7 +38,7 @@
 <div id="backdrop" onclick="toggleSide()"></div>
 <div class="side" id="side">
   <div class="sidehead">
-    <h1 id="brand" aria-label="Actelyo Legal Inference"><span id="brand-a"><img alt="Actelyo" src="/actelyo-logo.png" style="width:100px;height:40px;object-fit:contain"></span><span id="brand-word">Legal Inference</span><span id="ver"></span></h1>
+    <h1 id="brand" aria-label="Actelyo Legal Inference"><span id="brand-a"><img alt="Actelyo" src="/actelyo-logo.png" style="width:44px;height:34px;object-fit:contain"></span><span id="brand-word">Legal Inference</span><span id="ver"></span></h1>
     <span id="status-svc" class="statuspill" onclick="toggleSvcLog()" title="voir le journal du moteur" data-i18n="sidebar.status_svc_title" data-i18n-attr="title"><span class="skel skel-line" style="width:52px;height:8px;border-radius:999px"></span></span>
   </div>
   <!-- Avertissement de lancement (App Translocation macOS) — masqué par défaut. -->
@@ -231,12 +231,12 @@
       </div>
     </div></div>
   </details>
-  <details id="remote-details"><summary><span class="stitle" data-i18n="link.title">Actelyo Legal Inference LINK</span><span id="remote-badge" class="sbadge"></span></summary>
-    <div class="subhead"><span data-i18n="link.remote_subhead">Accès distant</span><span class="help" tabindex="0" onclick="event.preventDefault();event.stopPropagation();this.classList.toggle('open')">?<span class="tip" data-i18n="link.remote_help" data-i18n-html>Accédez à ce serveur Actelyo Legal Inference depuis <b>n'importe où</b>, sans ouvrir de port, à travers le relais <b>ajean.link</b>. Le trafic est chiffré de <b>bout en bout</b> : le relais ne voit rien. Abonnement 4,80 €/mois.</span></span></div>
-    <!-- Non connecté : on met en avant les avantages de l'abonnement Actelyo Legal Inference LINK pour
+  <details id="remote-details"><summary><span class="stitle" data-i18n="link.title">Relais externe</span><span id="remote-badge" class="sbadge"></span></summary>
+    <div class="subhead"><span data-i18n="link.remote_subhead">Accès distant</span><span class="help" tabindex="0" onclick="event.preventDefault();event.stopPropagation();this.classList.toggle('open')">?<span class="tip" data-i18n="link.remote_help" data-i18n-html>Accédez à ce serveur Actelyo Legal Inference depuis <b>n'importe où</b>, sans ouvrir de port, à travers le relais <b>ajean.link</b>. Le trafic est chiffré de <b>bout en bout</b> : le relais ne voit rien. Service tiers, abonnement séparé.</span></span></div>
+    <!-- Non connecté : on met en avant les avantages de l'abonnement External relay pour
          donner envie de s'abonner, puis le bouton (tout se passe dans la popup). -->
     <div id="remote-off" class="slist"><div class="rowbody">
-      <div class="link-perks-head" data-i18n="link.perks_heading">Passez à Actelyo Legal Inference LINK</div>
+      <div class="link-perks-head" data-i18n="link.perks_heading">Service tiers optionnel</div>
       <div class="link-perks">
         <div class="link-perk">
           <span class="link-perk-i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span>
@@ -253,7 +253,7 @@
       </div>
       <p class="muted" style="margin:0 0 8px" data-i18n="link.remote_off_desc">Ouvrez l'accès distant à ce serveur en quelques clics, sans terminal.</p>
       <button onclick="remoteConnect()" style="border-color:var(--accent);color:var(--accent)" data-i18n="link.connect_button">Connecter à ajean.link</button>
-      <div class="link-price" data-i18n="link.price_note">4,80 €/mois · sans engagement, résiliable à tout moment</div>
+      <div class="link-price" data-i18n="link.price_note">Service tiers : conditions et tarifs sur le portail du fournisseur.</div>
     </div></div>
     <!-- Connecté : URL publique + appairage + déconnexion. Le bouton « démarrer
          le tunnel » vit DANS la carte de l'adresse : c'est l'action de cette
@@ -296,8 +296,8 @@
       </div>
     </div>
     <!-- Rappel discret des avantages inclus (compte connecté). En footer de TOUTE la
-         section Actelyo Legal Inference LINK, pas coincé entre deux cartes : piloté par renderRemote. -->
-    <div id="remote-perks-mini" class="link-perks-mini" style="display:none" data-i18n="link.perks_mini" data-i18n-html>Inclus dans <b>Actelyo Legal Inference LINK</b> : accès distant chiffré de bout en bout · support dédié par chat · sauvegarde de vos réglages, presets, historique et mémoire.</div>
+         section External relay, pas coincé entre deux cartes : piloté par renderRemote. -->
+    <div id="remote-perks-mini" class="link-perks-mini" style="display:none" data-i18n="link.perks_mini" data-i18n-html>Inclus dans <b>External relay</b> : accès distant chiffré de bout en bout · support dédié par chat · sauvegarde de vos réglages, presets, historique et mémoire.</div>
   </details>
   <details id="lc-details"><summary><span class="stitle" data-i18n="engine.title">Engine</span></summary>
     <!-- Une seule carte : état, choix du mode et journal d'installation sont le
@@ -410,7 +410,7 @@
          qui la sépare du fil — la carte ne bouge donc pas d'un pixel. -->
     <div id="attach-list"></div>
     <div id="inputbar">
-      <textarea id="input" rows="1" placeholder="Discuter avec Jean" onkeydown="onKey(event)" oninput="autoGrow(this);syncSendBtn()" onpaste="onPaste(event)" data-i18n="chat.input_placeholder" data-i18n-attr="placeholder"></textarea>
+      <textarea id="input" rows="1" placeholder="Discuter avec Actelyo" onkeydown="onKey(event)" oninput="autoGrow(this);syncSendBtn()" onpaste="onPaste(event)" data-i18n="chat.input_placeholder" data-i18n-attr="placeholder"></textarea>
       <!-- Bouton « + » gris : JUSTE à gauche de la flèche d'envoi. Ouvre un petit menu
            (fichiers + trackers + mémoire). -->
       <button id="plus-btn" onclick="togglePlusMenu(event)" title="Ajouter" aria-label="Ajouter" aria-haspopup="true" data-i18n="chat.plus_button_title" data-i18n-attr="title"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></button>

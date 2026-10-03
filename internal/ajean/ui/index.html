@@ -1864,6 +1864,11 @@ button:hover{border-color:var(--dim);color:var(--text)}
 /* Conversation vide : un seul message centré à la place des réglages. */
 .xempty{display:flex;flex-direction:column;align-items:center;gap:6px;padding:44px 20px;text-align:center;color:var(--text);font-size:14px}
 .xempty-i{font-size:30px;line-height:1;color:var(--dim);opacity:.7}
+
+/* Keep the official light wordmark legible on either theme. */
+#brand img, #cl-logo, #ce-logo img { background:#102a43; padding:6px; border-radius:8px; box-sizing:content-box; }
+
+#brand-word { white-space:nowrap; }
 </style></head><body>
 <button id="menubtn" onclick="toggleSide()">☰</button>
 <!-- Installation d'un moteur en cours : le détail vit dans le panneau, qui est
@@ -1873,7 +1878,7 @@ button:hover{border-color:var(--dim);color:var(--text)}
 <div id="backdrop" onclick="toggleSide()"></div>
 <div class="side" id="side">
   <div class="sidehead">
-    <h1 id="brand" aria-label="Actelyo Legal Inference"><span id="brand-a"><img alt="Actelyo" src="/actelyo-logo.png" style="width:100px;height:40px;object-fit:contain"></span><span id="brand-word">Legal Inference</span><span id="ver"></span></h1>
+    <h1 id="brand" aria-label="Actelyo Legal Inference"><span id="brand-a"><img alt="Actelyo" src="/actelyo-logo.png" style="width:44px;height:34px;object-fit:contain"></span><span id="brand-word">Legal Inference</span><span id="ver"></span></h1>
     <span id="status-svc" class="statuspill" onclick="toggleSvcLog()" title="voir le journal du moteur" data-i18n="sidebar.status_svc_title" data-i18n-attr="title"><span class="skel skel-line" style="width:52px;height:8px;border-radius:999px"></span></span>
   </div>
   <!-- Avertissement de lancement (App Translocation macOS) — masqué par défaut. -->
@@ -2066,12 +2071,12 @@ button:hover{border-color:var(--dim);color:var(--text)}
       </div>
     </div></div>
   </details>
-  <details id="remote-details"><summary><span class="stitle" data-i18n="link.title">Actelyo Legal Inference LINK</span><span id="remote-badge" class="sbadge"></span></summary>
-    <div class="subhead"><span data-i18n="link.remote_subhead">Accès distant</span><span class="help" tabindex="0" onclick="event.preventDefault();event.stopPropagation();this.classList.toggle('open')">?<span class="tip" data-i18n="link.remote_help" data-i18n-html>Accédez à ce serveur Actelyo Legal Inference depuis <b>n'importe où</b>, sans ouvrir de port, à travers le relais <b>ajean.link</b>. Le trafic est chiffré de <b>bout en bout</b> : le relais ne voit rien. Abonnement 4,80 €/mois.</span></span></div>
-    <!-- Non connecté : on met en avant les avantages de l'abonnement Actelyo Legal Inference LINK pour
+  <details id="remote-details"><summary><span class="stitle" data-i18n="link.title">Relais externe</span><span id="remote-badge" class="sbadge"></span></summary>
+    <div class="subhead"><span data-i18n="link.remote_subhead">Accès distant</span><span class="help" tabindex="0" onclick="event.preventDefault();event.stopPropagation();this.classList.toggle('open')">?<span class="tip" data-i18n="link.remote_help" data-i18n-html>Accédez à ce serveur Actelyo Legal Inference depuis <b>n'importe où</b>, sans ouvrir de port, à travers le relais <b>ajean.link</b>. Le trafic est chiffré de <b>bout en bout</b> : le relais ne voit rien. Service tiers, abonnement séparé.</span></span></div>
+    <!-- Non connecté : on met en avant les avantages de l'abonnement External relay pour
          donner envie de s'abonner, puis le bouton (tout se passe dans la popup). -->
     <div id="remote-off" class="slist"><div class="rowbody">
-      <div class="link-perks-head" data-i18n="link.perks_heading">Passez à Actelyo Legal Inference LINK</div>
+      <div class="link-perks-head" data-i18n="link.perks_heading">Service tiers optionnel</div>
       <div class="link-perks">
         <div class="link-perk">
           <span class="link-perk-i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span>
@@ -2088,7 +2093,7 @@ button:hover{border-color:var(--dim);color:var(--text)}
       </div>
       <p class="muted" style="margin:0 0 8px" data-i18n="link.remote_off_desc">Ouvrez l'accès distant à ce serveur en quelques clics, sans terminal.</p>
       <button onclick="remoteConnect()" style="border-color:var(--accent);color:var(--accent)" data-i18n="link.connect_button">Connecter à ajean.link</button>
-      <div class="link-price" data-i18n="link.price_note">4,80 €/mois · sans engagement, résiliable à tout moment</div>
+      <div class="link-price" data-i18n="link.price_note">Service tiers : conditions et tarifs sur le portail du fournisseur.</div>
     </div></div>
     <!-- Connecté : URL publique + appairage + déconnexion. Le bouton « démarrer
          le tunnel » vit DANS la carte de l'adresse : c'est l'action de cette
@@ -2131,8 +2136,8 @@ button:hover{border-color:var(--dim);color:var(--text)}
       </div>
     </div>
     <!-- Rappel discret des avantages inclus (compte connecté). En footer de TOUTE la
-         section Actelyo Legal Inference LINK, pas coincé entre deux cartes : piloté par renderRemote. -->
-    <div id="remote-perks-mini" class="link-perks-mini" style="display:none" data-i18n="link.perks_mini" data-i18n-html>Inclus dans <b>Actelyo Legal Inference LINK</b> : accès distant chiffré de bout en bout · support dédié par chat · sauvegarde de vos réglages, presets, historique et mémoire.</div>
+         section External relay, pas coincé entre deux cartes : piloté par renderRemote. -->
+    <div id="remote-perks-mini" class="link-perks-mini" style="display:none" data-i18n="link.perks_mini" data-i18n-html>Inclus dans <b>External relay</b> : accès distant chiffré de bout en bout · support dédié par chat · sauvegarde de vos réglages, presets, historique et mémoire.</div>
   </details>
   <details id="lc-details"><summary><span class="stitle" data-i18n="engine.title">Engine</span></summary>
     <!-- Une seule carte : état, choix du mode et journal d'installation sont le
@@ -2245,7 +2250,7 @@ button:hover{border-color:var(--dim);color:var(--text)}
          qui la sépare du fil — la carte ne bouge donc pas d'un pixel. -->
     <div id="attach-list"></div>
     <div id="inputbar">
-      <textarea id="input" rows="1" placeholder="Discuter avec Jean" onkeydown="onKey(event)" oninput="autoGrow(this);syncSendBtn()" onpaste="onPaste(event)" data-i18n="chat.input_placeholder" data-i18n-attr="placeholder"></textarea>
+      <textarea id="input" rows="1" placeholder="Discuter avec Actelyo" onkeydown="onKey(event)" oninput="autoGrow(this);syncSendBtn()" onpaste="onPaste(event)" data-i18n="chat.input_placeholder" data-i18n-attr="placeholder"></textarea>
       <!-- Bouton « + » gris : JUSTE à gauche de la flèche d'envoi. Ouvre un petit menu
            (fichiers + trackers + mémoire). -->
       <button id="plus-btn" onclick="togglePlusMenu(event)" title="Ajouter" aria-label="Ajouter" aria-haspopup="true" data-i18n="chat.plus_button_title" data-i18n-attr="title"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></button>
@@ -3258,20 +3263,20 @@ fr: {
   "api.key_generate": "générer",
   "api.key_set": "définir…",
   "api.key_clear": "retirer",
-  "link.title": "Actelyo Legal Inference LINK",
+  "link.title": "Relais externe",
   "link.remote_subhead": "Accès distant",
-  "link.remote_help": "Accédez à ce serveur Actelyo Legal Inference depuis <b>n'importe où</b>, sans ouvrir de port, à travers le relais <b>ajean.link</b>. Le trafic est chiffré de <b>bout en bout</b> : le relais ne voit rien. Abonnement 4,80 €/mois.",
+  "link.remote_help": "Accédez à ce serveur Actelyo Legal Inference depuis <b>n'importe où</b>, sans ouvrir de port, à travers le relais <b>ajean.link</b>. Le trafic est chiffré de <b>bout en bout</b> : le relais ne voit rien. Service tiers, abonnement séparé.",
   "link.remote_off_desc": "Ouvrez l'accès distant à ce serveur en quelques clics, sans terminal.",
   "link.connect_button": "Connecter à ajean.link",
-  "link.perks_heading": "Passez à Actelyo Legal Inference LINK",
+  "link.perks_heading": "Service tiers optionnel",
   "link.perk_remote_t": "Accès distant sécurisé",
   "link.perk_remote_d": "Accédez à votre serveur Actelyo Legal Inference depuis n'importe où et depuis n'importe quelle application, chiffré de bout en bout — le relais ne voit rien.",
   "link.perk_support_t": "Support dédié par chat",
   "link.perk_support_d": "Une messagerie dédiée pour répondre à toutes vos questions, directement depuis l'application.",
   "link.perk_backup_t": "Sauvegarde intégrée",
   "link.perk_backup_d": "Vos réglages, presets, historique et mémoire sauvegardés automatiquement, chiffrés avant l'envoi.",
-  "link.price_note": "4,80 €/mois · sans engagement, résiliable à tout moment",
-  "link.perks_mini": "Inclus dans <b>Actelyo Legal Inference LINK</b> : accès distant chiffré de bout en bout · support dédié par chat · sauvegarde de vos réglages, presets, historique et mémoire.",
+  "link.price_note": "Service tiers : conditions et tarifs sur le portail du fournisseur.",
+  "link.perks_mini": "Inclus dans <b>External relay</b> : accès distant chiffré de bout en bout · support dédié par chat · sauvegarde de vos réglages, presets, historique et mémoire.",
   "link.remote_address_label": "Votre adresse d'accès distant",
   "link.copy_title": "copier",
   "link.open_title": "ouvrir",
@@ -3312,7 +3317,7 @@ fr: {
   "chat.compactions_title": "Compactages du contexte dans cette conversation",
   "chat.reason_level_title": "Niveau de réflexion",
   "chat.projects_button_title": "Projets (mémoire + conversations cloisonnées)",
-  "chat.input_placeholder": "Discuter avec Jean",
+  "chat.input_placeholder": "Discuter avec Actelyo",
   "chat.plus_button_title": "Ajouter",
   "chat.send_button_title": "envoyer",
   "chat.stop_button_title": "Arrêter",
@@ -4127,14 +4132,14 @@ fr: {
   "models.picker.files": "fichiers",
   "models.picker.missing_plural": "manquants",
   "models.picker.missing_singular": "manquant",
-  "models.picker.ajean_folder": "dossier ajean",
+  "models.picker.ajean_folder": "dossier du moteur",
   "models.picker.not_found_suffix": "— introuvable ; ajoute son dossier ci-dessous",
   "models.picker.not_found_paren": "(introuvable)",
   "models.dirs.models_plural": "modèles",
   "models.dirs.models_singular": "modèle",
   "models.dirs.unreadable": "illisible",
   "models.dirs.free": "libres",
-  "models.dirs.ajean_folder": "dossier ajean",
+  "models.dirs.ajean_folder": "dossier du moteur",
   "models.dirs.remove": "retirer",
   "models.dirs.enter_path": "indique un chemin de dossier",
   "models.dirs.added": "dossier ajouté",
@@ -4351,20 +4356,20 @@ en: {
   "api.key_generate": "generate",
   "api.key_set": "set…",
   "api.key_clear": "remove",
-  "link.title": "Actelyo Legal Inference LINK",
+  "link.title": "External relay",
   "link.remote_subhead": "Remote access",
-  "link.remote_help": "Access this Actelyo Legal Inference server from <b>anywhere</b>, with no port forwarding, through the <b>ajean.link</b> relay. Traffic is encrypted <b>end-to-end</b>: the relay sees nothing. Subscription €4.80/month.",
+  "link.remote_help": "Access this Actelyo Legal Inference server from <b>anywhere</b>, with no port forwarding, through the <b>ajean.link</b> relay. Traffic is encrypted <b>end-to-end</b>: the relay sees nothing. Third-party service with a separate subscription.",
   "link.remote_off_desc": "Open remote access to this server in a few clicks, no terminal needed.",
   "link.connect_button": "Connect to ajean.link",
-  "link.perks_heading": "Upgrade to Actelyo Legal Inference LINK",
+  "link.perks_heading": "Optional third-party service",
   "link.perk_remote_t": "Secure remote access",
   "link.perk_remote_d": "Reach your Actelyo Legal Inference server from anywhere and from any app, end-to-end encrypted — the relay sees nothing.",
   "link.perk_support_t": "Dedicated chat support",
   "link.perk_support_d": "A dedicated inbox to answer all your questions, right from the app.",
   "link.perk_backup_t": "Built-in backup",
   "link.perk_backup_d": "Your settings, presets, history and memory backed up automatically, encrypted before upload.",
-  "link.price_note": "€4.80/month · no commitment, cancel anytime",
-  "link.perks_mini": "Included with <b>Actelyo Legal Inference LINK</b>: end-to-end encrypted remote access · dedicated chat support · backup of your settings, presets, history and memory.",
+  "link.price_note": "Third-party service: see the provider portal for terms and pricing.",
+  "link.perks_mini": "Included with <b>External relay</b>: end-to-end encrypted remote access · dedicated chat support · backup of your settings, presets, history and memory.",
   "link.remote_address_label": "Your remote access address",
   "link.copy_title": "copy",
   "link.open_title": "open",
@@ -4405,7 +4410,7 @@ en: {
   "chat.compactions_title": "Context compactions in this conversation",
   "chat.reason_level_title": "Reasoning level",
   "chat.projects_button_title": "Projects (isolated memory + conversations)",
-  "chat.input_placeholder": "Chat with Jean",
+  "chat.input_placeholder": "Chat with Actelyo",
   "chat.plus_button_title": "Add",
   "chat.send_button_title": "send",
   "chat.stop_button_title": "stop",
@@ -5220,14 +5225,14 @@ en: {
   "models.picker.files": "files",
   "models.picker.missing_plural": "missing",
   "models.picker.missing_singular": "missing",
-  "models.picker.ajean_folder": "ajean folder",
+  "models.picker.ajean_folder": "engine folder",
   "models.picker.not_found_suffix": "— not found; add its folder below",
   "models.picker.not_found_paren": "(not found)",
   "models.dirs.models_plural": "models",
   "models.dirs.models_singular": "model",
   "models.dirs.unreadable": "unreadable",
   "models.dirs.free": "free",
-  "models.dirs.ajean_folder": "ajean folder",
+  "models.dirs.ajean_folder": "engine folder",
   "models.dirs.remove": "remove",
   "models.dirs.enter_path": "enter a folder path",
   "models.dirs.added": "folder added",
@@ -6621,7 +6626,7 @@ async function downloadExport(url){
     // tunnel, où tout arrive en application/json.
     const cd = r.headers.get('Content-Disposition') || '';
     const m = cd.match(/filename="([^"]+)"/);
-    const name = m ? m[1] : 'ajean-conversation.' + (url.includes('format=json') ? 'json' : 'md');
+    const name = m ? m[1] : 'actelyo-conversation.' + (url.includes('format=json') ? 'json' : 'md');
     // ⚠️ blobURL, surtout pas `url` : ce nom est déjà celui du paramètre, et le
     // redéclarer ici mettrait la ligne `jfetch(url)` ci-dessus dans la zone morte
     // du const — l'export échouerait avant même de partir.
