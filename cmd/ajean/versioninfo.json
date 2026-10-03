@@ -30,8 +30,8 @@
   },
   "VarFileInfo": {
     "Translation": {
-      "LangID": "040C",
-      "CharsetID": "04B0"
+      "LangID": 1033,
+      "CharsetID": 1200
     }
   }
 }
