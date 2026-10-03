@@ -41,7 +41,7 @@ const (
 
 // En-tête d'une page chiffrée. Sert de marqueur de format ET d'AAD (le tag GCM
 // couvre ainsi la version : impossible de rejouer un blob d'une autre version).
-var memPageMagic = []byte("AJEANMEMv1")
+var memPageMagic = []byte("Actelyo Legal InferenceMEMv1")
 
 // errNotEncrypted signale un contenu qui n'est pas une page chiffrée valide
 // (mauvais magic) — utile pour distinguer « clair » de « chiffré » à la volée.

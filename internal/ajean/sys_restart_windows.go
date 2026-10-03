@@ -44,7 +44,7 @@ func scheduleAppRestart() (bool, string) {
 		time.Sleep(1500 * time.Millisecond) // laisser la réponse atteindre le navigateur
 		os.Exit(0)
 	}()
-	return true, "AJEAN redémarre — la page se reconnectera toute seule dans quelques secondes."
+	return true, "Actelyo Legal Inference redémarre — la page se reconnectera toute seule dans quelques secondes."
 }
 
 // cmdRestartAfterUpdate est exécuté par l'accompagnateur détaché.

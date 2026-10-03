@@ -89,7 +89,7 @@ async function migrateLoadFlags(){
   if(lf) lf.style.display='none'; // le moteur redémarre, le statut se resynchronise
 }
 // checkServerFreshness : en accès distant (app.ajean.link / <machine>.ajean.link),
-// le front est toujours la dernière version publiée, mais le serveur AJEAN de la
+// le front est toujours la dernière version publiée, mais le serveur Actelyo Legal Inference de la
 // machine peut être ancien. Un vieux serveur = endpoints/champs manquants → des
 // fonctionnalités du front cassent en silence. On interroge /api/update (le
 // serveur compare SA version à la dernière release GitHub) et, si une mise à jour
@@ -123,7 +123,7 @@ async function checkServerFreshness(){
 }
 
 // checkAppUpdate : bandeau discret en BAS du menu quand une nouvelle version
-// d'AJEAN est disponible (le serveur compare SA version à la dernière release
+// d'Actelyo Legal Inference est disponible (le serveur compare SA version à la dernière release
 // GitHub via /api/update). Pendant LOCAL de checkServerFreshness : en accès
 // distant (ajean.link) c'est déjà #server-stale en haut qui prévient, donc on ne
 // double pas ici. Passif : cliquer ouvre la section Actions et lance la
@@ -393,7 +393,7 @@ async function loadRam(){
 let TELEMETRY_LEGACY=false;
 // VRAM + RAM en UN seul appel. Repli automatique et définitif sur /api/vram +
 // /api/ram si le serveur ne connaît pas la route (accès distant : le front est à
-// jour mais le serveur AJEAN de la machine peut être plus ancien).
+// jour mais le serveur Actelyo Legal Inference de la machine peut être plus ancien).
 async function loadTelemetry(){
   if(document.hidden) return; // onglet caché : on ne sonde rien (palier 1)
   if(TELEMETRY_LEGACY){ await Promise.allSettled([loadVram(), loadRam()]); return; }

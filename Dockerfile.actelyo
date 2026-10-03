@@ -1,0 +1,17 @@
+FROM golang:1.27.1-bookworm AS build
+WORKDIR /src
+COPY go.mod go.sum ./
+RUN go mod download
+COPY . .
+RUN go generate ./internal/ajean && CGO_ENABLED=0 GOOS=linux go build -trimpath -o /out/actelyo-legal-inference ./cmd/ajean
+
+FROM debian:bookworm-slim
+RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates git cmake g++ make curl libgomp1 && rm -rf /var/lib/apt/lists/*
+RUN useradd --uid 1000 --create-home actelyo && mkdir -p /data && chown actelyo:actelyo /data
+COPY --from=build /out/actelyo-legal-inference /usr/local/bin/actelyo-legal-inference
+ENV AJEAN_HOME=/data ACTELYO_CONTAINER=1 ACTELYO_INFERENCE_BIND=0.0.0.0
+USER actelyo
+WORKDIR /data
+EXPOSE 8090 8080
+ENTRYPOINT ["actelyo-legal-inference"]
+CMD ["web", "8090"]

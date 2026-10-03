@@ -19,19 +19,19 @@
     "FileSubType": "00"
   },
   "StringFileInfo": {
-    "CompanyName": "AJEAN contributors",
-    "FileDescription": "AJEAN — gestionnaire mono-binaire de serveurs llama.cpp auto-hébergés",
-    "InternalName": "ajean",
+    "CompanyName": "Actelyo",
+    "FileDescription": "Actelyo Legal Inference - modèles GGUF et inférence locale",
+    "InternalName": "actelyo-legal-inference",
     "LegalCopyright": "Copyright (c) 2026 AJEAN contributors. MIT License.",
-    "OriginalFilename": "ajean.exe",
-    "ProductName": "AJEAN",
+    "OriginalFilename": "actelyo-legal-inference.exe",
+    "ProductName": "Actelyo Legal Inference",
     "ProductVersion": "0.14.9",
-    "Comments": "https://github.com/nathaninline/ajean — projet open source (MIT)"
+    "Comments": "https://github.com/jeanneretsamy-ux/ajeanactelyo - distribution Actelyo (MIT)"
   },
   "VarFileInfo": {
     "Translation": {
-      "LangID": "040C",
-      "CharsetID": "04B0"
+      "LangID": 1033,
+      "CharsetID": 1200
     }
   }
 }

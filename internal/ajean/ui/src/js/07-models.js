@@ -885,7 +885,7 @@ function eaToggleFlag(flag, on){
 // --- Mémoire : mlock / no-mmap, avec le nouveau --load-mode --------------------
 // llama.cpp récent a REMPLACÉ --mlock / --no-mmap par --load-mode. Les presets
 // continuent de stocker l'ANCIENNE représentation (portable sur tous les
-// backends, y compris les forks qui gardent --mlock) ; AJEAN la traduit en
+// backends, y compris les forks qui gardent --mlock) ; Actelyo Legal Inference la traduit en
 // --load-mode au lancement pour les moteurs récents. Ces deux fonctions font le
 // pont côté éditeur pour que les interrupteurs restent justes même si un preset
 // porte déjà un --load-mode (édité à la main ou migré).

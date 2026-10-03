@@ -35,7 +35,7 @@ async function loadRemote(){
   // on l'AFFICHE en état informatif « connecté » (on est forcément relié pour être
   // ici), avec l'adresse et « en ligne », mais SANS les contrôles purement locaux
   // (appairage, déconnexion, démarrage du tunnel, sauvegarde) qui ne
-  // fonctionneraient pas à distance. Ainsi le menu AJEAN LINK reste visible comme
+  // fonctionneraient pas à distance. Ainsi le menu Actelyo Legal Inference LINK reste visible comme
   // dans l'UI de base.
   if(location.hostname === 'app.ajean.link'){
     if(det) det.style.display='';

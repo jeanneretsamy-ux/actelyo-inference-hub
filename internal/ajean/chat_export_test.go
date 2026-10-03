@@ -37,7 +37,7 @@ func TestExportMarkdownPorteToutLeFil(t *testing.T) {
 	md := conv.ExportMarkdown(defaultExportOpts())
 	for _, want := range []string{
 		"## Vous", "combien font 2+2 ?",
-		"## AJEAN",
+		"## Actelyo Legal Inference",
 		"<summary>Raisonnement</summary>", "addition simple",
 		"bash", "echo 4",
 	} {
@@ -45,9 +45,9 @@ func TestExportMarkdownPorteToutLeFil(t *testing.T) {
 			t.Errorf("Markdown exporté sans %q :\n%s", want, md)
 		}
 	}
-	// L'en-tête AJEAN ne doit apparaître qu'UNE fois pour un tour, même entrecoupé
+	// L'en-tête Actelyo Legal Inference ne doit apparaître qu'UNE fois pour un tour, même entrecoupé
 	// d'un appel d'outil.
-	if n := strings.Count(md, "\n## AJEAN\n"); n != 1 {
+	if n := strings.Count(md, "\n## Actelyo Legal Inference\n"); n != 1 {
 		t.Errorf("en-tête assistant répété %d fois", n)
 	}
 }

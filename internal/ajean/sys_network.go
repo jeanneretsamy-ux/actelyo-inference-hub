@@ -11,7 +11,7 @@ import (
 //
 // Le moteur écoute à l'adresse HOST. Sous Windows, l'installation pose
 // HOST=127.0.0.1 : le chat du navigateur marche (il passe par le serveur web
-// d'AJEAN, sur la même machine), mais l'endpoint OpenAI :8080/v1 est INVISIBLE
+// d'Actelyo Legal Inference, sur la même machine), mais l'endpoint OpenAI :8080/v1 est INVISIBLE
 // depuis le reste du réseau. Or c'est très exactement ce que les gens viennent
 // chercher : brancher un logiciel tiers sur le modèle qui tourne dans le salon.
 //
@@ -19,7 +19,7 @@ import (
 //  1. HOST n'était réglable NULLE PART dans l'interface — il fallait connaître
 //     « ajean edit » et savoir quoi y écrire.
 //  2. Même à 0.0.0.0, le pare-feu Windows bloque les connexions entrantes tant
-//     qu'aucune règle n'autorise le port. AJEAN n'en posait aucune.
+//     qu'aucune règle n'autorise le port. Actelyo Legal Inference n'en posait aucune.
 //
 // D'où un seul interrupteur qui fait les deux, et qui DIT ce qu'il n'a pas pu
 // faire (poser une règle de pare-feu exige les droits administrateur, que

@@ -1,23 +1,18 @@
 package ajean
 
-// sys_brand_icon.go — l'icône de la marque AJEAN, rendue à la volée.
-//
-// RÉPLIQUE EXACTE du favicon de l'UI web : carré à coins arrondis NOIR + « j »
-// blanc (rects (6,3) (6,5) (4,7) sur une grille 12x12). Une seule source pour
-// tous les usages — zone de notification Windows, barre de menus macOS, icône du
-// .exe — pour qu'ils ne puissent plus diverger comme quand le favicon est passé
-// au noir en laissant les icônes système en bleu.
-//
-// Aucun asset binaire à committer : tout est dessiné ici, et l'icône du .exe est
-// produite par `go generate ./cmd/ajean` (voir tools/gen-icon).
+// Actelyo system icons are derived from the official ERP PNG.
 
 import (
 	"bytes"
+	_ "embed"
 	"encoding/binary"
 	"image"
 	"image/color"
 	"image/png"
 )
+
+//go:embed actelyo-logo.png
+var actelyoLogoPNG []byte
 
 const trayIconSize = 32
 
@@ -27,51 +22,39 @@ var (
 	brandClear = color.RGBA{0, 0, 0, 0}
 )
 
-// glyphRects : les trois rectangles blancs du « j », en unités de la grille 12.
-var glyphRects = [][4]float64{{6, 3, 2, 2}, {6, 5, 2, 2}, {4, 7, 2, 2}}
-
-// brandIconImage dessine l'icône à la taille n. bg peint le carré arrondi, fg le
-// « j ». Les deux peuvent être transparents : c'est ce qui produit l'icône
-// « template » de macOS.
+// Keep the logo aspect ratio and alpha at each system-icon size.
 func brandIconImage(n int, bg, fg color.RGBA) *image.RGBA {
-	const r = 2.0 // rayon des coins, en unités de la grille 12
-	outside := func(gx, gy float64) bool {
-		corner := func(cx, cy float64) bool {
-			dx, dy := gx-cx, gy-cy
-			return dx*dx+dy*dy > r*r
-		}
-		switch {
-		case gx < r && gy < r:
-			return corner(r, r)
-		case gx > 12-r && gy < r:
-			return corner(12-r, r)
-		case gx < r && gy > 12-r:
-			return corner(r, 12-r)
-		case gx > 12-r && gy > 12-r:
-			return corner(12-r, 12-r)
-		}
-		return false
+	source, err := png.Decode(bytes.NewReader(actelyoLogoPNG))
+	if err != nil {
+		panic(err)
 	}
-	img := image.NewRGBA(image.Rect(0, 0, n, n))
-	scale := float64(n) / 12
-	for y := 0; y < n; y++ {
-		for x := 0; x < n; x++ {
-			gx := (float64(x) + 0.5) / scale
-			gy := (float64(y) + 0.5) / scale
-			if outside(gx, gy) {
-				img.Set(x, y, brandClear)
-				continue
+	result := image.NewRGBA(image.Rect(0, 0, n, n))
+	bounds := source.Bounds()
+	width, height := bounds.Dx(), bounds.Dy()
+	scaledWidth, scaledHeight := n, n
+	if width > height {
+		scaledHeight = n * height / width
+	} else {
+		scaledWidth = n * width / height
+	}
+	if scaledWidth < 1 {
+		scaledWidth = 1
+	}
+	if scaledHeight < 1 {
+		scaledHeight = 1
+	}
+	left, top := (n-scaledWidth)/2, (n-scaledHeight)/2
+	for y := 0; y < scaledHeight; y++ {
+		for x := 0; x < scaledWidth; x++ {
+			pixel := source.At(bounds.Min.X+x*width/scaledWidth, bounds.Min.Y+y*height/scaledHeight)
+			if fg.A == 0 {
+				_, _, _, alpha := pixel.RGBA()
+				pixel = color.RGBA{A: uint8(alpha >> 8)}
 			}
-			c := bg
-			for _, rc := range glyphRects {
-				if gx >= rc[0] && gx < rc[0]+rc[2] && gy >= rc[1] && gy < rc[1]+rc[3] {
-					c = fg
-				}
-			}
-			img.Set(x, y, c)
+			result.Set(left+x, top+y, pixel)
 		}
 	}
-	return img
+	return result
 }
 
 func encodePNG(img *image.RGBA) []byte {

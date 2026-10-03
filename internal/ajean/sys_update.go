@@ -24,7 +24,7 @@ import (
 // l'OS/arch courant, remplace le binaire en place, puis affiche quoi redémarrer.
 // AUCUN redémarrage de service automatique (choix volontaire, plus sûr).
 
-const updateRepo = "nathaninline/ajean"
+const updateRepo = "jeanneretsamy-ux/ajeanactelyo"
 
 type ghRelease struct {
 	TagName string `json:"tag_name"`
@@ -247,7 +247,7 @@ func updatePermissionError(exe string) error {
 		// Windows renvoie le MÊME code (5, accès refusé) pour « droits
 		// insuffisants » et pour « fichier utilisé par un processus » : on nomme
 		// les deux causes au lieu d'affirmer la mauvaise.
-		return fmt.Errorf("impossible de remplacer %s : soit un autre AJEAN utilise ce fichier (ferme l'application et arrête le service, puis réessaie), soit les droits manquent (relance AJEAN en administrateur)", exe)
+		return fmt.Errorf("impossible de remplacer %s : soit un autre Actelyo Legal Inference utilise ce fichier (ferme l'application et arrête le service, puis réessaie), soit les droits manquent (relance Actelyo Legal Inference en administrateur)", exe)
 	}
 	return fmt.Errorf("droits insuffisants pour remplacer %s (le binaire appartient à root) — lance la mise à jour en ligne de commande : sudo ajean update", exe)
 }
