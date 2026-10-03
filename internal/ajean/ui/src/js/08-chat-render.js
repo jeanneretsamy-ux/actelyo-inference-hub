@@ -233,7 +233,7 @@ function setLabelCounts(el, add, del){
   if(del) cnt.appendChild(Object.assign(document.createElement('span'),{className:'d',textContent:'-'+del}));
   lab.appendChild(cnt);
 }
-// Ligne de mesures sous une réponse (prefill / decode). Les étiquettes VOUS/AJEAN
+// Ligne de mesures sous une réponse (prefill / decode). Les étiquettes VOUS/Actelyo Legal Inference
 // sont masquées dans cette mise en page, donc les chiffres qu'on y écrivait
 // avaient disparu : ils ont leur propre ligne, discrète, sous le texte. Toujours
 // affichée (plus de réglage pour la cacher).

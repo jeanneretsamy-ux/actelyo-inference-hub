@@ -7,7 +7,7 @@ function authHeaders(h){ h = Object.assign({}, h||{}); if(TOKEN) h['Authorizatio
 const API_BASE = location.pathname.replace(/\/(index\.html)?$/, '');
 // Délai maximal d'un appel /api/* ordinaire. Sans lui, une requête que le
 // navigateur met en file d'attente (plafond de ~6 connexions par domaine, atteint
-// dès qu'on laisse traîner plusieurs onglets AJEAN) reste suspendue POUR TOUJOURS :
+// dès qu'on laisse traîner plusieurs onglets Actelyo Legal Inference) reste suspendue POUR TOUJOURS :
 // ni réponse, ni erreur, et une UI figée sur « chargement… » sans rien à afficher.
 // Mieux vaut une erreur franche. Les flux longs (SSE) passent leur propre signal
 // et ne sont donc jamais concernés.

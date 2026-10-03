@@ -26,10 +26,10 @@ func runTray(url string) {
 		// colore selon le thème. Indispensable depuis que la marque est noire —
 		// une icône noire « en dur » est illisible sur une barre de menus sombre.
 		systray.SetTemplateIcon(brandTemplatePNG(trayIconSize), BrandIconPNG(trayIconSize))
-		systray.SetTooltip("AJEAN — votre IA locale")
-		mOpen := systray.AddMenuItem("Ouvrir AJEAN", "Ouvrir l'interface")
+		systray.SetTooltip("Actelyo Legal Inference — votre IA locale")
+		mOpen := systray.AddMenuItem("Ouvrir Actelyo Legal Inference", "Ouvrir l'interface")
 		systray.AddSeparator()
-		mQuit := systray.AddMenuItem("Quitter", "Arrêter AJEAN")
+		mQuit := systray.AddMenuItem("Quitter", "Arrêter Actelyo Legal Inference")
 
 		go func() {
 			for {

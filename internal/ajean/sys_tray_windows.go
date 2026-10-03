@@ -22,9 +22,9 @@ import (
 func runTray(url string) {
 	systray.Run(func() {
 		systray.SetIcon(trayIcon())
-		systray.SetTitle("AJEAN")
-		systray.SetTooltip("AJEAN — votre IA locale")
-		mOpen := systray.AddMenuItem("Ouvrir AJEAN", "Ouvrir l'interface")
+		systray.SetTitle("Actelyo Legal Inference")
+		systray.SetTooltip("Actelyo Legal Inference — votre IA locale")
+		mOpen := systray.AddMenuItem("Ouvrir Actelyo Legal Inference", "Ouvrir l'interface")
 		systray.AddSeparator()
 		mQuit := systray.AddMenuItem("Quitter", "Arrêter AJEAN et décharger le modèle")
 

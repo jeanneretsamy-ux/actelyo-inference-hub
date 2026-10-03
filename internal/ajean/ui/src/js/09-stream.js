@@ -138,7 +138,7 @@ let GENEL=null;
 function ensureGenEl(){
   const chat=chatEl();
   if(!GENEL){ GENEL=document.createElement('div'); GENEL.className='genstatus';
-    // Le J du favicon AJEAN : deux carrés empilés (la barre) + un carré décalé à
+    // Le J du favicon Actelyo Legal Inference : deux carrés empilés (la barre) + un carré décalé à
     // gauche en bas (le pied du J). Statique, en accent. Classe (pas id) : plusieurs
     // lignes figées coexistent dans le fil, une par tour terminé.
     GENEL.innerHTML='<svg class="jlogo" viewBox="0 0 12 12" aria-hidden="true"><rect x="6" y="3" width="2" height="2"/><rect x="6" y="5" width="2" height="2"/><rect x="4" y="7" width="2" height="2"/></svg><span class="gtxt"></span>'; }
@@ -566,7 +566,7 @@ function handleDelta(d){
 }
 // Flux d'abonnement permanent + reconnexion auto (from=lastSeq → pas de
 // re-téléchargement complet après une coupure / bascule d'appareil).
-// Un onglet caché RELÂCHE son flux SSE. Sans ça, chaque onglet AJEAN laissé
+// Un onglet caché RELÂCHE son flux SSE. Sans ça, chaque onglet Actelyo Legal Inference laissé
 // ouvert monopolise une des ~6 connexions simultanées autorisées par domaine :
 // au-delà, toute requête (journal, installation du moteur…) reste en file
 // d'attente sans jamais partir ni échouer — un blocage silencieux très
@@ -799,7 +799,7 @@ loadAll();
 // la conversation vive. Plus besoin d'un bouton dédié.
 (function(){ const ta=document.getElementById('input'); if(ta) ta.addEventListener('focus', ()=>{ if(READING) exitReading(); }); })();
 // Une seule fois au démarrage (interroge GitHub côté serveur) : prévient en accès
-// distant si le serveur AJEAN de la machine est plus ancien que le front hébergé.
+// distant si le serveur Actelyo Legal Inference de la machine est plus ancien que le front hébergé.
 checkServerFreshness();
 checkAppUpdate();
 setInterval(loadStatus, 5000);

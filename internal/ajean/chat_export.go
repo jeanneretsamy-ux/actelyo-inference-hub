@@ -269,7 +269,7 @@ func (c *Conversation) ExportMarkdown(o exportOpts) string {
 	}
 
 	var b strings.Builder
-	fmt.Fprintf(&b, "# Conversation AJEAN\n\nExportée le %s par AJEAN %s.\n",
+	fmt.Fprintf(&b, "# Conversation Actelyo Legal Inference\n\nExportée le %s par Actelyo Legal Inference %s.\n",
 		time.Now().Format("02/01/2006 à 15:04"), Version)
 	// Un export tronqué ou allégé doit le DIRE : relu six mois plus tard, un fil
 	// sans ses raisonnements ne doit pas passer pour le fil complet.
@@ -283,7 +283,7 @@ func (c *Conversation) ExportMarkdown(o exportOpts) string {
 	openBubble := false
 	head := func() {
 		if !openBubble {
-			b.WriteString("\n## AJEAN\n")
+			b.WriteString("\n## Actelyo Legal Inference\n")
 			openBubble = true
 		}
 	}

@@ -46,7 +46,7 @@ WantedBy=multi-user.target
 // OpenAI, servis par un SEUL process (donc une seule conversation).
 // Champs : unité du moteur (dépendance), User, WorkingDirectory, ExecStart.
 const uiUnitTemplate = `[Unit]
-Description=AJEAN — interface web + accès distant
+Description=Actelyo Legal Inference — interface web + accès distant
 After=network-online.target %s.service
 Wants=network-online.target
 

@@ -127,7 +127,7 @@ func (s *splash) close() {
 }
 
 func createSplashWindow() uintptr {
-	className, _ := syscall.UTF16PtrFromString("AJEANSplash")
+	className, _ := syscall.UTF16PtrFromString("Actelyo Legal InferenceSplash")
 	hInst, _, _ := pGetModuleHandleW.Call(0)
 
 	splashClassOnce.Do(func() {
@@ -154,7 +154,7 @@ func createSplashWindow() uintptr {
 	cy, _, _ := pGetSystemMetrics.Call(smCY)
 	x := (int(cx) - splashW) / 2
 	y := (int(cy) - splashH) / 2
-	title, _ := syscall.UTF16PtrFromString("AJEAN")
+	title, _ := syscall.UTF16PtrFromString("Actelyo Legal Inference")
 
 	hwnd, _, _ := pCreateWindowExW.Call(
 		uintptr(exTopmost|exToolwindow),
@@ -220,22 +220,30 @@ func paintSplash(hdc uintptr) {
 	pFillRect.Call(hdc, uintptr(unsafe.Pointer(&full)), bg)
 	pDeleteObject.Call(bg)
 
-	// Logo « j » blanc — mêmes rectangles que l'icône et le favicon
-	// (glyphRects, sys_brand_icon.go), mis à l'échelle.
-	white, _, _ := pCreateSolidBrush.Call(colWhite)
+	// The splash uses the same Actelyo asset as the tray and browser.
 	const logo = 58
 	ox, oy := int32(40), int32((splashH-logo)/2)
-	scale := float64(logo) / 12
-	for _, rc := range glyphRects {
-		r := rect{
-			left:   ox + int32(rc[0]*scale),
-			top:    oy + int32(rc[1]*scale),
-			right:  ox + int32((rc[0]+rc[2])*scale),
-			bottom: oy + int32((rc[1]+rc[3])*scale),
+	image := brandIconImage(logo, brandBlack, brandWhite)
+	brushes := make(map[uint32]uintptr)
+	for y := 0; y < logo; y++ {
+		for x := 0; x < logo; x++ {
+			pixel := image.RGBAAt(x, y)
+			if pixel.A < 128 {
+				continue
+			}
+			color := uint32(pixel.R) | uint32(pixel.G)<<8 | uint32(pixel.B)<<16
+			brush, found := brushes[color]
+			if !found {
+				brush, _, _ = pCreateSolidBrush.Call(uintptr(color))
+				brushes[color] = brush
+			}
+			r := rect{ox + int32(x), oy + int32(y), ox + int32(x+1), oy + int32(y+1)}
+			pFillRect.Call(hdc, uintptr(unsafe.Pointer(&r)), brush)
 		}
-		pFillRect.Call(hdc, uintptr(unsafe.Pointer(&r)), white)
 	}
-	pDeleteObject.Call(white)
+	for _, brush := range brushes {
+		pDeleteObject.Call(brush)
+	}
 
 	// Textes (blanc, fond transparent).
 	const transparent = 1
@@ -243,7 +251,7 @@ func paintSplash(hdc uintptr) {
 	pSetTextColor.Call(hdc, colWhite)
 
 	textX := ox + logo + 26
-	drawText(hdc, "AJEAN", -30, 700, rect{textX, 40, splashW - 20, 82})
+	drawText(hdc, "Actelyo Legal Inference", -22, 700, rect{textX, 40, splashW - 20, 82})
 	drawText(hdc, "Lancement en cours…", -17, 400, rect{textX, 84, splashW - 20, 118})
 }
 

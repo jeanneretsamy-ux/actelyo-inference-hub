@@ -476,9 +476,9 @@ foreach ($d in @($progs, [Environment]::GetFolderPath('Desktop'))) {
     $s=$w.CreateShortcut($lnk)
     $s.TargetPath=$t
     $s.WorkingDirectory=(Split-Path $t)
-    $s.Description='AJEAN, votre IA locale'
+    $s.Description='Actelyo Legal Inference, votre IA locale'
     # Minimisé (7) : le binaire étant en sous-système console, Windows lui alloue
-    # une console au lancement. AJEAN la referme aussitôt, mais demander un
+    # une console au lancement. Actelyo Legal Inference la referme aussitôt, mais demander un
     # démarrage minimisé garantit qu'elle n'est jamais peinte à l'écran.
     $s.WindowStyle=7
     $s.IconLocation="$t,0"

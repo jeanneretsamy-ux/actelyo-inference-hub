@@ -7,13 +7,13 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="AJEAN">
-<title>AJEAN</title>
+<meta name="apple-mobile-web-app-title" content="Actelyo Legal Inference">
+<title>Actelyo Legal Inference</title>
 <!-- Favicon (même marque « ajean » que la landing/portail) + icône PWA (écran d'accueil
      iOS). SVG inline pour le favicon, PNG 180×180 en data-URI pour apple-touch-icon
      (iOS n'accepte pas le SVG pour l'icône d'accueil). Aucun fichier externe requis. -->
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'><rect width='12' height='12' rx='2' ry='2' fill='%23000'/><rect x='6' y='3' width='2' height='2' fill='%23fff'/><rect x='6' y='5' width='2' height='2' fill='%23fff'/><rect x='4' y='7' width='2' height='2' fill='%23fff'/></svg>">
-<link rel="apple-touch-icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALQAAAC0CAIAAACyr5FlAAABBUlEQVR42u3SAQkAAAwCQfuX3lI4GNxF0E8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIArU2NbcYhDHOIQhzgQB+JAHIgDcSAOxIE4xCEOcYhDHIgDcSAOxIE4EAfiQBziEIc4xCEOcYgDcSAOxIE4EAfiQBziEIc4xCEOcYgDcSAOxIE4EAfiQByIQxziEIc4xIE4EAfiQByIA3EgDsQhDnGIQxziEIc4EAfiQByIAxciDsSBOBAH4kAc4hCHOMQhDnGIA3EgDsSBOBAH4kAc4hCHOMQhDnGIA3EgDsSBOBAH4kAciEMc4hCHOMQBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADfLBHMhi4TnG6EAAAAAElFTkSuQmCC">
+<link rel="icon" href="/actelyo-logo.png">
+<link rel="apple-touch-icon" href="/actelyo-logo.png">
 <!-- Manifeste PWA (installabilité Android/desktop + Web Push). iOS s'appuie sur
      les métas apple-* ci-dessus ; le manifeste ne le gêne pas. Servi à la racine
      (web_server.go en local/tunnel, ajean-app sur app.ajean.link). -->
@@ -1873,7 +1873,7 @@ button:hover{border-color:var(--dim);color:var(--text)}
 <div id="backdrop" onclick="toggleSide()"></div>
 <div class="side" id="side">
   <div class="sidehead">
-    <h1 id="brand" aria-label="ajean"><span id="brand-a"><svg viewBox="0 0 4 5" shape-rendering="crispEdges" fill="currentColor"><rect x="1" y="0" width="2" height="1"/><rect x="0" y="1" width="1" height="1"/><rect x="3" y="1" width="1" height="1"/><rect x="0" y="2" width="4" height="1"/><rect x="0" y="3" width="1" height="1"/><rect x="3" y="3" width="1" height="1"/><rect x="0" y="4" width="1" height="1"/><rect x="3" y="4" width="1" height="1"/></svg></span><span id="brand-word"><svg viewBox="0 0 17 5" shape-rendering="crispEdges" fill="currentColor"><rect x="1" y="0" width="1" height="1"/><rect x="1" y="1" width="1" height="1"/><rect x="1" y="2" width="1" height="1"/><rect x="1" y="3" width="1" height="1"/><rect x="0" y="4" width="1" height="1"/><rect x="3" y="0" width="4" height="1"/><rect x="3" y="1" width="1" height="1"/><rect x="3" y="2" width="3" height="1"/><rect x="3" y="3" width="1" height="1"/><rect x="3" y="4" width="4" height="1"/><rect x="9" y="0" width="2" height="1"/><rect x="8" y="1" width="1" height="1"/><rect x="11" y="1" width="1" height="1"/><rect x="8" y="2" width="4" height="1"/><rect x="8" y="3" width="1" height="1"/><rect x="11" y="3" width="1" height="1"/><rect x="8" y="4" width="1" height="1"/><rect x="11" y="4" width="1" height="1"/><rect x="13" y="0" width="1" height="1"/><rect x="16" y="0" width="1" height="1"/><rect x="13" y="1" width="2" height="1"/><rect x="16" y="1" width="1" height="1"/><rect x="13" y="2" width="1" height="1"/><rect x="15" y="2" width="2" height="1"/><rect x="13" y="3" width="1" height="1"/><rect x="16" y="3" width="1" height="1"/><rect x="13" y="4" width="1" height="1"/><rect x="16" y="4" width="1" height="1"/></svg></span><span id="ver" onclick="manualUpdateCheck()" style="cursor:pointer" title="vérifier les mises à jour" data-i18n="settings.check_update_title" data-i18n-attr="title"></span></h1>
+    <h1 id="brand" aria-label="Actelyo Legal Inference"><span id="brand-a"><img alt="Actelyo" src="/actelyo-logo.png" style="width:100px;height:40px;object-fit:contain"></span><span id="brand-word">Legal Inference</span><span id="ver"></span></h1>
     <span id="status-svc" class="statuspill" onclick="toggleSvcLog()" title="voir le journal du moteur" data-i18n="sidebar.status_svc_title" data-i18n-attr="title"><span class="skel skel-line" style="width:52px;height:8px;border-radius:999px"></span></span>
   </div>
   <!-- Avertissement de lancement (App Translocation macOS) — masqué par défaut. -->
@@ -1979,7 +1979,7 @@ button:hover{border-color:var(--dim);color:var(--text)}
     <div class="subhead" data-i18n="agent.settings_subhead">Paramètres</div>
     <div class="slist">
         <label class="switchrow agent-gated"><span class="switch"><input type="checkbox" id="compact-toggle" onchange="toggleCompact()"><span class="slider"></span></span> <span data-i18n="agent.compact_toggle">compactage automatique du contexte</span><span class="help" tabindex="0" onclick="event.preventDefault();event.stopPropagation();this.classList.toggle('open')">?<span class="tip" data-i18n="agent.compact_help" data-i18n-html>activé par défaut : quand la conversation approche de la limite de contexte, les vieux tours sont résumés automatiquement (façon Hermes) au lieu de t'imposer un « vider ». Discussions quasi illimitées sans perdre le fil.</span></span></label>
-        <label class="switchrow"><span class="switch"><input type="checkbox" id="push-toggle" onchange="togglePush()"><span class="slider"></span></span> <span data-i18n="agent.push_toggle">me prévenir quand la réponse est prête</span><span class="help" tabindex="0" onclick="event.preventDefault();event.stopPropagation();this.classList.toggle('open')">?<span class="tip" data-i18n="agent.push_help" data-i18n-html>Le serveur t'envoie une <b>notification</b> à la fin de chaque réponse, même l'app fermée ou le téléphone verrouillé. Sur iPhone : <b>ajoute d'abord AJEAN à l'écran d'accueil</b> puis active depuis l'app installée. À régler sur chaque appareil.</span></span></label>
+        <label class="switchrow"><span class="switch"><input type="checkbox" id="push-toggle" onchange="togglePush()"><span class="slider"></span></span> <span data-i18n="agent.push_toggle">me prévenir quand la réponse est prête</span><span class="help" tabindex="0" onclick="event.preventDefault();event.stopPropagation();this.classList.toggle('open')">?<span class="tip" data-i18n="agent.push_help" data-i18n-html>Le serveur t'envoie une <b>notification</b> à la fin de chaque réponse, même l'app fermée ou le téléphone verrouillé. Sur iPhone : <b>ajoute d'abord Actelyo Legal Inference à l'écran d'accueil</b> puis active depuis l'app installée. À régler sur chaque appareil.</span></span></label>
         <!-- Chiffrement (off par défaut) : UN seul interrupteur. Chiffre la mémoire
              ET les conversations. Ton mot de passe ouvre le coffre, ton navigateur
              le retient (déverrouillage auto ensuite), le serveur ne peut jamais
@@ -2066,16 +2066,16 @@ button:hover{border-color:var(--dim);color:var(--text)}
       </div>
     </div></div>
   </details>
-  <details id="remote-details"><summary><span class="stitle" data-i18n="link.title">AJEAN LINK</span><span id="remote-badge" class="sbadge"></span></summary>
-    <div class="subhead"><span data-i18n="link.remote_subhead">Accès distant</span><span class="help" tabindex="0" onclick="event.preventDefault();event.stopPropagation();this.classList.toggle('open')">?<span class="tip" data-i18n="link.remote_help" data-i18n-html>Accédez à ce serveur AJEAN depuis <b>n'importe où</b>, sans ouvrir de port, à travers le relais <b>ajean.link</b>. Le trafic est chiffré de <b>bout en bout</b> : le relais ne voit rien. Abonnement 4,80 €/mois.</span></span></div>
-    <!-- Non connecté : on met en avant les avantages de l'abonnement AJEAN LINK pour
+  <details id="remote-details"><summary><span class="stitle" data-i18n="link.title">Actelyo Legal Inference LINK</span><span id="remote-badge" class="sbadge"></span></summary>
+    <div class="subhead"><span data-i18n="link.remote_subhead">Accès distant</span><span class="help" tabindex="0" onclick="event.preventDefault();event.stopPropagation();this.classList.toggle('open')">?<span class="tip" data-i18n="link.remote_help" data-i18n-html>Accédez à ce serveur Actelyo Legal Inference depuis <b>n'importe où</b>, sans ouvrir de port, à travers le relais <b>ajean.link</b>. Le trafic est chiffré de <b>bout en bout</b> : le relais ne voit rien. Abonnement 4,80 €/mois.</span></span></div>
+    <!-- Non connecté : on met en avant les avantages de l'abonnement Actelyo Legal Inference LINK pour
          donner envie de s'abonner, puis le bouton (tout se passe dans la popup). -->
     <div id="remote-off" class="slist"><div class="rowbody">
-      <div class="link-perks-head" data-i18n="link.perks_heading">Passez à AJEAN LINK</div>
+      <div class="link-perks-head" data-i18n="link.perks_heading">Passez à Actelyo Legal Inference LINK</div>
       <div class="link-perks">
         <div class="link-perk">
           <span class="link-perk-i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span>
-          <div><div class="link-perk-t" data-i18n="link.perk_remote_t">Accès distant sécurisé</div><div class="link-perk-d" data-i18n="link.perk_remote_d">Accédez à votre serveur AJEAN depuis n'importe où et depuis n'importe quelle application, chiffré de bout en bout — le relais ne voit rien.</div></div>
+          <div><div class="link-perk-t" data-i18n="link.perk_remote_t">Accès distant sécurisé</div><div class="link-perk-d" data-i18n="link.perk_remote_d">Accédez à votre serveur Actelyo Legal Inference depuis n'importe où et depuis n'importe quelle application, chiffré de bout en bout — le relais ne voit rien.</div></div>
         </div>
         <div class="link-perk">
           <span class="link-perk-i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span>
@@ -2131,8 +2131,8 @@ button:hover{border-color:var(--dim);color:var(--text)}
       </div>
     </div>
     <!-- Rappel discret des avantages inclus (compte connecté). En footer de TOUTE la
-         section AJEAN LINK, pas coincé entre deux cartes : piloté par renderRemote. -->
-    <div id="remote-perks-mini" class="link-perks-mini" style="display:none" data-i18n="link.perks_mini" data-i18n-html>Inclus dans <b>AJEAN LINK</b> : accès distant chiffré de bout en bout · support dédié par chat · sauvegarde de vos réglages, presets, historique et mémoire.</div>
+         section Actelyo Legal Inference LINK, pas coincé entre deux cartes : piloté par renderRemote. -->
+    <div id="remote-perks-mini" class="link-perks-mini" style="display:none" data-i18n="link.perks_mini" data-i18n-html>Inclus dans <b>Actelyo Legal Inference LINK</b> : accès distant chiffré de bout en bout · support dédié par chat · sauvegarde de vos réglages, presets, historique et mémoire.</div>
   </details>
   <details id="lc-details"><summary><span class="stitle" data-i18n="engine.title">Engine</span></summary>
     <!-- Une seule carte : état, choix du mode et journal d'installation sont le
@@ -2186,7 +2186,7 @@ button:hover{border-color:var(--dim);color:var(--text)}
        du bas (vérif manuelle possible en cliquant le n° de version), « nouvelle
        conversation » et « exporter » vivent dans le hub Projets, et le bench a
        rejoint le modal du preset (visible seulement pour le preset actif). -->
-  <!-- Bandeau discret « nouvelle version AJEAN disponible », collé en bas du menu.
+  <!-- Bandeau discret « nouvelle version Actelyo Legal Inference disponible », collé en bas du menu.
        Rempli et affiché par checkAppUpdate (05-status.js) en accès LOCAL ; en accès
        distant c'est #server-stale (en haut) qui joue ce rôle. -->
   <div id="app-update" class="app-update" hidden onclick="onAppUpdateClick()"></div>
@@ -2196,8 +2196,8 @@ button:hover{border-color:var(--dim);color:var(--text)}
   <!-- Voile de chargement du fil : sans lui, une connexion lente donne un chat
        VIDE indiscernable d'une conversation vide. Masqué au signal {caught_up}. -->
   <!-- Loader du fil : la marque « J » d'ajean (même glyphe que le favicon et le logo
-       de compactage) en grand, qui pulse. Pas le mot AJEAN complet. -->
-  <div id="chat-loading" class="show" aria-label="chargement de la conversation" data-i18n="chat.loading_aria" data-i18n-attr="aria-label"><svg id="cl-logo" viewBox="0 0 12 12" aria-hidden="true" fill="currentColor"><rect x="6" y="3" width="2" height="2"/><rect x="6" y="5" width="2" height="2"/><rect x="4" y="7" width="2" height="2"/></svg></div>
+       de compactage) en grand, qui pulse. Pas le mot Actelyo Legal Inference complet. -->
+  <div id="chat-loading" class="show" aria-label="chargement de la conversation" data-i18n="chat.loading_aria" data-i18n-attr="aria-label"><img id="cl-logo" alt="Actelyo" src="/actelyo-logo.png" style="max-width:120px;object-fit:contain"></div>
   <!-- Accueil : affiché UNIQUEMENT quand le fil est réellement vide (et une fois
        le replay terminé, sinon il clignoterait au chargement de chaque page).
        Le logo est cloné depuis #brand au démarrage — une seule source de vérité
@@ -3199,7 +3199,7 @@ fr: {
   "agent.compact_toggle": "compactage automatique du contexte",
   "agent.compact_help": "activé par défaut : quand la conversation approche de la limite de contexte, les vieux tours sont résumés automatiquement (façon Hermes) au lieu de t'imposer un « vider ». Discussions quasi illimitées sans perdre le fil.",
   "agent.push_toggle": "me prévenir quand la réponse est prête",
-  "agent.push_help": "Le serveur t'envoie une <b>notification</b> à la fin de chaque réponse, même l'app fermée ou le téléphone verrouillé. Sur iPhone : <b>ajoute d'abord AJEAN à l'écran d'accueil</b> puis active depuis l'app installée. À régler sur chaque appareil.",
+  "agent.push_help": "Le serveur t'envoie une <b>notification</b> à la fin de chaque réponse, même l'app fermée ou le téléphone verrouillé. Sur iPhone : <b>ajoute d'abord Actelyo Legal Inference à l'écran d'accueil</b> puis active depuis l'app installée. À régler sur chaque appareil.",
   "agent.encrypt_toggle": "activer le chiffrement",
   "agent.encrypt_help": "Chiffre ta <b>mémoire</b> ET tes <b>conversations</b> au repos (AES-256), protégées par ta <b>clé d'accès</b> : si tu as accès à l'interface, c'est déjà déverrouillé ; sinon on te demande ta clé d'accès. Une <b>clé de récupération</b> t'est donnée à l'activation (garde-la). Rien n'est perdu : snapshots automatiques avant chaque bascule.",
   "memory.title": "Mémoire",
@@ -3258,20 +3258,20 @@ fr: {
   "api.key_generate": "générer",
   "api.key_set": "définir…",
   "api.key_clear": "retirer",
-  "link.title": "AJEAN LINK",
+  "link.title": "Actelyo Legal Inference LINK",
   "link.remote_subhead": "Accès distant",
-  "link.remote_help": "Accédez à ce serveur AJEAN depuis <b>n'importe où</b>, sans ouvrir de port, à travers le relais <b>ajean.link</b>. Le trafic est chiffré de <b>bout en bout</b> : le relais ne voit rien. Abonnement 4,80 €/mois.",
+  "link.remote_help": "Accédez à ce serveur Actelyo Legal Inference depuis <b>n'importe où</b>, sans ouvrir de port, à travers le relais <b>ajean.link</b>. Le trafic est chiffré de <b>bout en bout</b> : le relais ne voit rien. Abonnement 4,80 €/mois.",
   "link.remote_off_desc": "Ouvrez l'accès distant à ce serveur en quelques clics, sans terminal.",
   "link.connect_button": "Connecter à ajean.link",
-  "link.perks_heading": "Passez à AJEAN LINK",
+  "link.perks_heading": "Passez à Actelyo Legal Inference LINK",
   "link.perk_remote_t": "Accès distant sécurisé",
-  "link.perk_remote_d": "Accédez à votre serveur AJEAN depuis n'importe où et depuis n'importe quelle application, chiffré de bout en bout — le relais ne voit rien.",
+  "link.perk_remote_d": "Accédez à votre serveur Actelyo Legal Inference depuis n'importe où et depuis n'importe quelle application, chiffré de bout en bout — le relais ne voit rien.",
   "link.perk_support_t": "Support dédié par chat",
   "link.perk_support_d": "Une messagerie dédiée pour répondre à toutes vos questions, directement depuis l'application.",
   "link.perk_backup_t": "Sauvegarde intégrée",
   "link.perk_backup_d": "Vos réglages, presets, historique et mémoire sauvegardés automatiquement, chiffrés avant l'envoi.",
   "link.price_note": "4,80 €/mois · sans engagement, résiliable à tout moment",
-  "link.perks_mini": "Inclus dans <b>AJEAN LINK</b> : accès distant chiffré de bout en bout · support dédié par chat · sauvegarde de vos réglages, presets, historique et mémoire.",
+  "link.perks_mini": "Inclus dans <b>Actelyo Legal Inference LINK</b> : accès distant chiffré de bout en bout · support dédié par chat · sauvegarde de vos réglages, presets, historique et mémoire.",
   "link.remote_address_label": "Votre adresse d'accès distant",
   "link.copy_title": "copier",
   "link.open_title": "ouvrir",
@@ -3535,8 +3535,8 @@ fr: {
   "uikit.ok": "OK",
   "uikit.validate": "Valider",
   "uikit.confirm": "Confirmer",
-  "api.timeout_error": "requête sans réponse après 30 s (trop d'onglets AJEAN ouverts ?)",
-  "api.key_required_msg": "Clé de pilotage AJEAN requise :",
+  "api.timeout_error": "requête sans réponse après 30 s (trop d'onglets Actelyo Legal Inference ouverts ?)",
+  "api.key_required_msg": "Clé de pilotage Actelyo Legal Inference requise :",
   "api.auth_title": "Authentification",
   "api.key_placeholder": "clé…",
   "status.stopped": "arrêté",
@@ -3544,7 +3544,7 @@ fr: {
   "status.error": "erreur",
   "status.loading": "chargement…",
   "status.stale_currently": "actuellement",
-  "status.stale_intro": "Le serveur AJEAN de cette machine n'est pas à jour",
+  "status.stale_intro": "Le serveur Actelyo Legal Inference de cette machine n'est pas à jour",
   "status.stale_new_version": "La version",
   "status.stale_recommend": "est disponible. Il est recommandé de le mettre à jour pour profiter de toutes les fonctionnalités et éviter d'éventuels bugs de compatibilité.",
   "status.update_btn": "Mettre à jour",
@@ -3566,7 +3566,7 @@ fr: {
   "status.error_prefix": "Erreur :",
   "status.new_version_prefix": "Nouvelle version",
   "status.new_version_suffix": "disponible.",
-  "status.up_to_date": "AJEAN est à jour ✓",
+  "status.up_to_date": "Actelyo Legal Inference est à jour ✓",
   "status.update_confirm": "Installer la mise à jour maintenant ? Le service va redémarrer.",
   "status.network_error": "Erreur réseau",
   "status.loading_dots": "…",
@@ -3849,7 +3849,7 @@ fr: {
   "remote.fingerprint_label": "Empreinte :",
   "remote.pairing_code_label": "Code d'appairage (valable 10 min, usage unique)",
   "remote.code_unavailable": "code indisponible",
-  "push.ios_add_to_home": "Sur iPhone : ajoute d'abord AJEAN à l'écran d'accueil, puis rouvre-le depuis l'icône pour activer les notifications.",
+  "push.ios_add_to_home": "Sur iPhone : ajoute d'abord Actelyo Legal Inference à l'écran d'accueil, puis rouvre-le depuis l'icône pour activer les notifications.",
   "push.not_supported": "Ce navigateur ne prend pas en charge les notifications.",
   "push.blocked_in_browser": "Notifications bloquées dans les réglages du navigateur — réautorise-les pour ce site.",
   "push.enabled_status": "Activées : une notif à chaque réponse terminée.",
@@ -4292,7 +4292,7 @@ en: {
   "agent.compact_toggle": "automatic context compaction",
   "agent.compact_help": "on by default: when the conversation nears the context limit, old turns are automatically summarized (Hermes-style) instead of forcing you to \"clear\". Near-unlimited conversations without losing the thread.",
   "agent.push_toggle": "notify me when the response is ready",
-  "agent.push_help": "The server sends you a <b>notification</b> at the end of each response, even with the app closed or the phone locked. On iPhone: <b>first add AJEAN to the home screen</b>, then enable it from the installed app. Must be set up on each device.",
+  "agent.push_help": "The server sends you a <b>notification</b> at the end of each response, even with the app closed or the phone locked. On iPhone: <b>first add Actelyo Legal Inference to the home screen</b>, then enable it from the installed app. Must be set up on each device.",
   "agent.encrypt_toggle": "enable encryption",
   "agent.encrypt_help": "Encrypts your <b>memory</b> AND your <b>conversations</b> at rest (AES-256), protected by your <b>access key</b>: if you have access to the interface, it's already unlocked; otherwise you'll be asked for your access key. A <b>recovery key</b> is given to you when you enable it (keep it safe). Nothing is lost: automatic snapshots before every switch.",
   "memory.title": "Memory",
@@ -4351,20 +4351,20 @@ en: {
   "api.key_generate": "generate",
   "api.key_set": "set…",
   "api.key_clear": "remove",
-  "link.title": "AJEAN LINK",
+  "link.title": "Actelyo Legal Inference LINK",
   "link.remote_subhead": "Remote access",
-  "link.remote_help": "Access this AJEAN server from <b>anywhere</b>, with no port forwarding, through the <b>ajean.link</b> relay. Traffic is encrypted <b>end-to-end</b>: the relay sees nothing. Subscription €4.80/month.",
+  "link.remote_help": "Access this Actelyo Legal Inference server from <b>anywhere</b>, with no port forwarding, through the <b>ajean.link</b> relay. Traffic is encrypted <b>end-to-end</b>: the relay sees nothing. Subscription €4.80/month.",
   "link.remote_off_desc": "Open remote access to this server in a few clicks, no terminal needed.",
   "link.connect_button": "Connect to ajean.link",
-  "link.perks_heading": "Upgrade to AJEAN LINK",
+  "link.perks_heading": "Upgrade to Actelyo Legal Inference LINK",
   "link.perk_remote_t": "Secure remote access",
-  "link.perk_remote_d": "Reach your AJEAN server from anywhere and from any app, end-to-end encrypted — the relay sees nothing.",
+  "link.perk_remote_d": "Reach your Actelyo Legal Inference server from anywhere and from any app, end-to-end encrypted — the relay sees nothing.",
   "link.perk_support_t": "Dedicated chat support",
   "link.perk_support_d": "A dedicated inbox to answer all your questions, right from the app.",
   "link.perk_backup_t": "Built-in backup",
   "link.perk_backup_d": "Your settings, presets, history and memory backed up automatically, encrypted before upload.",
   "link.price_note": "€4.80/month · no commitment, cancel anytime",
-  "link.perks_mini": "Included with <b>AJEAN LINK</b>: end-to-end encrypted remote access · dedicated chat support · backup of your settings, presets, history and memory.",
+  "link.perks_mini": "Included with <b>Actelyo Legal Inference LINK</b>: end-to-end encrypted remote access · dedicated chat support · backup of your settings, presets, history and memory.",
   "link.remote_address_label": "Your remote access address",
   "link.copy_title": "copy",
   "link.open_title": "open",
@@ -4628,8 +4628,8 @@ en: {
   "uikit.ok": "OK",
   "uikit.validate": "Validate",
   "uikit.confirm": "Confirm",
-  "api.timeout_error": "no response after 30s (too many AJEAN tabs open?)",
-  "api.key_required_msg": "AJEAN control key required:",
+  "api.timeout_error": "no response after 30s (too many Actelyo Legal Inference tabs open?)",
+  "api.key_required_msg": "Actelyo Legal Inference control key required:",
   "api.auth_title": "Authentication",
   "api.key_placeholder": "key…",
   "status.stopped": "stopped",
@@ -4637,7 +4637,7 @@ en: {
   "status.error": "error",
   "status.loading": "loading…",
   "status.stale_currently": "currently",
-  "status.stale_intro": "This machine's AJEAN server is out of date",
+  "status.stale_intro": "This machine's Actelyo Legal Inference server is out of date",
   "status.stale_new_version": "Version",
   "status.stale_recommend": "is available. It's recommended to update to get all the features and avoid possible compatibility issues.",
   "status.update_btn": "Update",
@@ -4659,7 +4659,7 @@ en: {
   "status.error_prefix": "Error:",
   "status.new_version_prefix": "New version",
   "status.new_version_suffix": "available.",
-  "status.up_to_date": "AJEAN is up to date ✓",
+  "status.up_to_date": "Actelyo Legal Inference is up to date ✓",
   "status.update_confirm": "Install the update now? The service will restart.",
   "status.network_error": "Network error",
   "status.loading_dots": "…",
@@ -4942,7 +4942,7 @@ en: {
   "remote.fingerprint_label": "Fingerprint:",
   "remote.pairing_code_label": "Pairing code (valid 10 min, single use)",
   "remote.code_unavailable": "code unavailable",
-  "push.ios_add_to_home": "On iPhone: first add AJEAN to the home screen, then reopen it from the icon to enable notifications.",
+  "push.ios_add_to_home": "On iPhone: first add Actelyo Legal Inference to the home screen, then reopen it from the icon to enable notifications.",
   "push.not_supported": "This browser doesn't support notifications.",
   "push.blocked_in_browser": "Notifications blocked in the browser settings — re-allow them for this site.",
   "push.enabled_status": "Enabled: a notification each time a response finishes.",
@@ -5580,7 +5580,7 @@ function authHeaders(h){ h = Object.assign({}, h||{}); if(TOKEN) h['Authorizatio
 const API_BASE = location.pathname.replace(/\/(index\.html)?$/, '');
 // Délai maximal d'un appel /api/* ordinaire. Sans lui, une requête que le
 // navigateur met en file d'attente (plafond de ~6 connexions par domaine, atteint
-// dès qu'on laisse traîner plusieurs onglets AJEAN) reste suspendue POUR TOUJOURS :
+// dès qu'on laisse traîner plusieurs onglets Actelyo Legal Inference) reste suspendue POUR TOUJOURS :
 // ni réponse, ni erreur, et une UI figée sur « chargement… » sans rien à afficher.
 // Mieux vaut une erreur franche. Les flux longs (SSE) passent leur propre signal
 // et ne sont donc jamais concernés.
@@ -5721,7 +5721,7 @@ async function migrateLoadFlags(){
   if(lf) lf.style.display='none'; // le moteur redémarre, le statut se resynchronise
 }
 // checkServerFreshness : en accès distant (app.ajean.link / <machine>.ajean.link),
-// le front est toujours la dernière version publiée, mais le serveur AJEAN de la
+// le front est toujours la dernière version publiée, mais le serveur Actelyo Legal Inference de la
 // machine peut être ancien. Un vieux serveur = endpoints/champs manquants → des
 // fonctionnalités du front cassent en silence. On interroge /api/update (le
 // serveur compare SA version à la dernière release GitHub) et, si une mise à jour
@@ -5755,7 +5755,7 @@ async function checkServerFreshness(){
 }
 
 // checkAppUpdate : bandeau discret en BAS du menu quand une nouvelle version
-// d'AJEAN est disponible (le serveur compare SA version à la dernière release
+// d'Actelyo Legal Inference est disponible (le serveur compare SA version à la dernière release
 // GitHub via /api/update). Pendant LOCAL de checkServerFreshness : en accès
 // distant (ajean.link) c'est déjà #server-stale en haut qui prévient, donc on ne
 // double pas ici. Passif : cliquer ouvre la section Actions et lance la
@@ -6025,7 +6025,7 @@ async function loadRam(){
 let TELEMETRY_LEGACY=false;
 // VRAM + RAM en UN seul appel. Repli automatique et définitif sur /api/vram +
 // /api/ram si le serveur ne connaît pas la route (accès distant : le front est à
-// jour mais le serveur AJEAN de la machine peut être plus ancien).
+// jour mais le serveur Actelyo Legal Inference de la machine peut être plus ancien).
 async function loadTelemetry(){
   if(document.hidden) return; // onglet caché : on ne sonde rien (palier 1)
   if(TELEMETRY_LEGACY){ await Promise.allSettled([loadVram(), loadRam()]); return; }
@@ -7725,7 +7725,7 @@ function eaToggleFlag(flag, on){
 // --- Mémoire : mlock / no-mmap, avec le nouveau --load-mode --------------------
 // llama.cpp récent a REMPLACÉ --mlock / --no-mmap par --load-mode. Les presets
 // continuent de stocker l'ANCIENNE représentation (portable sur tous les
-// backends, y compris les forks qui gardent --mlock) ; AJEAN la traduit en
+// backends, y compris les forks qui gardent --mlock) ; Actelyo Legal Inference la traduit en
 // --load-mode au lancement pour les moteurs récents. Ces deux fonctions font le
 // pont côté éditeur pour que les interrupteurs restent justes même si un preset
 // porte déjà un --load-mode (édité à la main ou migré).
@@ -8405,7 +8405,7 @@ function setLabelCounts(el, add, del){
   if(del) cnt.appendChild(Object.assign(document.createElement('span'),{className:'d',textContent:'-'+del}));
   lab.appendChild(cnt);
 }
-// Ligne de mesures sous une réponse (prefill / decode). Les étiquettes VOUS/AJEAN
+// Ligne de mesures sous une réponse (prefill / decode). Les étiquettes VOUS/Actelyo Legal Inference
 // sont masquées dans cette mise en page, donc les chiffres qu'on y écrivait
 // avaient disparu : ils ont leur propre ligne, discrète, sous le texte. Toujours
 // affichée (plus de réglage pour la cacher).
@@ -8959,7 +8959,7 @@ let GENEL=null;
 function ensureGenEl(){
   const chat=chatEl();
   if(!GENEL){ GENEL=document.createElement('div'); GENEL.className='genstatus';
-    // Le J du favicon AJEAN : deux carrés empilés (la barre) + un carré décalé à
+    // Le J du favicon Actelyo Legal Inference : deux carrés empilés (la barre) + un carré décalé à
     // gauche en bas (le pied du J). Statique, en accent. Classe (pas id) : plusieurs
     // lignes figées coexistent dans le fil, une par tour terminé.
     GENEL.innerHTML='<svg class="jlogo" viewBox="0 0 12 12" aria-hidden="true"><rect x="6" y="3" width="2" height="2"/><rect x="6" y="5" width="2" height="2"/><rect x="4" y="7" width="2" height="2"/></svg><span class="gtxt"></span>'; }
@@ -9387,7 +9387,7 @@ function handleDelta(d){
 }
 // Flux d'abonnement permanent + reconnexion auto (from=lastSeq → pas de
 // re-téléchargement complet après une coupure / bascule d'appareil).
-// Un onglet caché RELÂCHE son flux SSE. Sans ça, chaque onglet AJEAN laissé
+// Un onglet caché RELÂCHE son flux SSE. Sans ça, chaque onglet Actelyo Legal Inference laissé
 // ouvert monopolise une des ~6 connexions simultanées autorisées par domaine :
 // au-delà, toute requête (journal, installation du moteur…) reste en file
 // d'attente sans jamais partir ni échouer — un blocage silencieux très
@@ -9620,7 +9620,7 @@ loadAll();
 // la conversation vive. Plus besoin d'un bouton dédié.
 (function(){ const ta=document.getElementById('input'); if(ta) ta.addEventListener('focus', ()=>{ if(READING) exitReading(); }); })();
 // Une seule fois au démarrage (interroge GitHub côté serveur) : prévient en accès
-// distant si le serveur AJEAN de la machine est plus ancien que le front hébergé.
+// distant si le serveur Actelyo Legal Inference de la machine est plus ancien que le front hébergé.
 checkServerFreshness();
 checkAppUpdate();
 setInterval(loadStatus, 5000);
@@ -10192,7 +10192,7 @@ async function loadRemote(){
   // on l'AFFICHE en état informatif « connecté » (on est forcément relié pour être
   // ici), avec l'adresse et « en ligne », mais SANS les contrôles purement locaux
   // (appairage, déconnexion, démarrage du tunnel, sauvegarde) qui ne
-  // fonctionneraient pas à distance. Ainsi le menu AJEAN LINK reste visible comme
+  // fonctionneraient pas à distance. Ainsi le menu Actelyo Legal Inference LINK reste visible comme
   // dans l'UI de base.
   if(location.hostname === 'app.ajean.link'){
     if(det) det.style.display='';

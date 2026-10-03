@@ -18,7 +18,7 @@ import (
 )
 
 //go:generate go run ../../tools/assemble-ui ui
-//go:embed ui/index.html ui/marked.min.js ui/sw.js ui/manifest.webmanifest
+//go:embed ui/index.html ui/marked.min.js ui/sw.js ui/manifest.webmanifest ui/actelyo-logo.png
 var uiFS embed.FS
 
 // cmdWeb starts the HTTP server on the given port (default 8090).
@@ -32,7 +32,11 @@ func cmdWeb(args []string) error {
 		port = n
 	}
 	mux := newWebMux()
-	addr := fmt.Sprintf("0.0.0.0:%d", port)
+	host := os.Getenv("ACTELYO_INFERENCE_BIND")
+	if host == "" {
+		host = "127.0.0.1"
+	}
+	addr := net.JoinHostPort(host, strconv.Itoa(port))
 
 	ln, err := net.Listen("tcp", addr)
 	if err != nil {
@@ -116,6 +120,15 @@ func newWebMux() *http.ServeMux {
 	// / non liée / non armée depuis le démarrage).
 	StartBackupScheduler()
 	mux := http.NewServeMux()
+	mux.HandleFunc("/actelyo-logo.png", func(w http.ResponseWriter, r *http.Request) {
+		logo, err := uiFS.ReadFile("ui/actelyo-logo.png")
+		if err != nil {
+			http.Error(w, "Logo indisponible", http.StatusInternalServerError)
+			return
+		}
+		w.Header().Set("Content-Type", "image/png")
+		_, _ = w.Write(logo)
+	})
 	// Pages publiques : le HTML et le JS ne contiennent aucun secret. Toute la
 	// donnée et toutes les actions passent par /api/* qui, lui, exige la clé.
 	mux.HandleFunc("/", handleIndex)
