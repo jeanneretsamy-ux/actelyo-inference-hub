@@ -1,18 +1,10 @@
 package actelyohub
 
-// sys_brand_icon.go — l'icône de la marque ACTELYO INFERENCE HUB, rendue à la volée.
-//
-// RÉPLIQUE EXACTE du favicon de l'UI web : carré à coins arrondis NOIR + « j »
-// blanc (rects (6,3) (6,5) (4,7) sur une grille 12x12). Une seule source pour
-// tous les usages — zone de notification Windows, barre de menus macOS, icône du
-// .exe — pour qu'ils ne puissent plus diverger comme quand le favicon est passé
-// au noir en laissant les icônes système en bleu.
-//
-// Aucun asset binaire à committer : tout est dessiné ici, et l'icône du .exe est
-// produite par `go generate ./cmd/actelyohub` (voir tools/gen-icon).
+// Actelyo symbol from ACTELYO-ERP, shared by desktop icons and web branding.
 
 import (
 	"bytes"
+	_ "embed"
 	"encoding/binary"
 	"image"
 	"image/color"
@@ -27,48 +19,30 @@ var (
 	brandClear = color.RGBA{0, 0, 0, 0}
 )
 
-// glyphRects draws the Actelyo A on a 12-unit grid.
-var glyphRects = [][4]float64{{3, 4, 2, 5}, {7, 4, 2, 5}, {4, 3, 4, 2}, {5, 6, 2, 1}}
+//go:embed brand/actelyo-symbol.png
+var actelyoSymbolPNG []byte
 
-// brandIconImage dessine l'icône à la taille n. bg peint le carré arrondi, fg le
-// « j ». Les deux peuvent être transparents : c'est ce qui produit l'icône
-// « template » de macOS.
-func brandIconImage(n int, bg, fg color.RGBA) *image.RGBA {
-	const r = 2.0 // rayon des coins, en unités de la grille 12
-	outside := func(gx, gy float64) bool {
-		corner := func(cx, cy float64) bool {
-			dx, dy := gx-cx, gy-cy
-			return dx*dx+dy*dy > r*r
-		}
-		switch {
-		case gx < r && gy < r:
-			return corner(r, r)
-		case gx > 12-r && gy < r:
-			return corner(12-r, r)
-		case gx < r && gy > 12-r:
-			return corner(r, 12-r)
-		case gx > 12-r && gy > 12-r:
-			return corner(12-r, 12-r)
-		}
-		return false
+var actelyoSymbol = func() image.Image {
+	img, err := png.Decode(bytes.NewReader(actelyoSymbolPNG))
+	if err != nil {
+		panic("invalid embedded Actelyo symbol: " + err.Error())
 	}
+	return img
+}()
+
+// brandIconImage scales the original asset; transparent fg selects the macOS template.
+func brandIconImage(n int, _ color.RGBA, fg color.RGBA) *image.RGBA {
 	img := image.NewRGBA(image.Rect(0, 0, n, n))
-	scale := float64(n) / 12
+	bounds := actelyoSymbol.Bounds()
 	for y := 0; y < n; y++ {
 		for x := 0; x < n; x++ {
-			gx := (float64(x) + 0.5) / scale
-			gy := (float64(y) + 0.5) / scale
-			if outside(gx, gy) {
-				img.Set(x, y, brandClear)
-				continue
+			c := actelyoSymbol.At(bounds.Min.X+x*bounds.Dx()/n, bounds.Min.Y+y*bounds.Dy()/n)
+			if fg.A == 0 {
+				_, _, _, a := c.RGBA()
+				img.SetRGBA(x, y, color.RGBA{A: uint8(a >> 8)})
+			} else {
+				img.Set(x, y, c)
 			}
-			c := bg
-			for _, rc := range glyphRects {
-				if gx >= rc[0] && gx < rc[0]+rc[2] && gy >= rc[1] && gy < rc[1]+rc[3] {
-					c = fg
-				}
-			}
-			img.Set(x, y, c)
 		}
 	}
 	return img
@@ -80,18 +54,11 @@ func encodePNG(img *image.RGBA) []byte {
 	return buf.Bytes()
 }
 
-// BrandIconPNG rend l'icône de marque (noir + « j » blanc) en PNG de n pixels.
+// BrandIconPNG renders the official Actelyo symbol at n pixels.
 // Exporté pour le générateur d'icône du .exe (tools/gen-icon).
 func BrandIconPNG(n int) []byte { return encodePNG(brandIconImage(n, brandBlack, brandWhite)) }
 
-// brandTemplatePNG rend la variante « template » attendue par macOS : seule la
-// couche alpha compte, le système colore la forme selon le thème de la barre de
-// menus. Le « j » est donc DÉCOUPÉ (transparent) dans un carré opaque, sans quoi
-// une icône entièrement noire disparaît sur une barre de menus sombre.
-//
-// Utilisée par sys_tray_darwin.go — un fichier que seule une compilation avec
-// CGO voit. Les analyseurs lancés sans CGO la croient morte : elle avait été
-// supprimée à ce titre, ce qui a cassé la compilation macOS en CI.
+// brandTemplatePNG uses the symbol alpha for the macOS menu bar.
 //
 //lint:ignore U1000 utilisée par sys_tray_darwin.go, invisible sans CGO/macOS
 func brandTemplatePNG(n int) []byte {

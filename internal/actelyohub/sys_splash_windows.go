@@ -5,7 +5,7 @@ package actelyohub
 // sys_splash_windows.go — écran de démarrage « Lancement de ACTELYO INFERENCE HUB… ».
 //
 // Petite fenêtre sans bordure, à coins arrondis, aux couleurs de la marque
-// (fond bleu #1f6feb, logo « j » blanc, texte blanc), affichée le temps que le
+// (fond noir, symbole Actelyo, texte blanc), affichée le temps que le
 // serveur monte et que le navigateur s'ouvre. Rendu GDI (pur syscall, aucun
 // CGO). Elle tourne sur son propre thread avec sa boucle de messages ; close()
 // lui envoie WM_CLOSE.
@@ -94,7 +94,7 @@ type wndClassExW struct {
 }
 
 const (
-	// Fond noir + « j » blanc : même marque que le favicon et que les icônes
+	// Fond noir : même symbole Actelyo que le favicon et les icônes
 	// système (voir sys_brand_icon.go). L'écran de démarrage restait bleu.
 	colBrand = 0x00000000 // COLORREF = 0x00BBGGRR
 	colWhite = 0x00FFFFFF
@@ -220,22 +220,26 @@ func paintSplash(hdc uintptr) {
 	pFillRect.Call(hdc, uintptr(unsafe.Pointer(&full)), bg)
 	pDeleteObject.Call(bg)
 
-	// Logo « j » blanc — mêmes rectangles que l'icône et le favicon
-	// (glyphRects, sys_brand_icon.go), mis à l'échelle.
-	white, _, _ := pCreateSolidBrush.Call(colWhite)
+	// Render the official symbol on the black splash background.
 	const logo = 58
 	ox, oy := int32(40), int32((splashH-logo)/2)
-	scale := float64(logo) / 12
-	for _, rc := range glyphRects {
-		r := rect{
-			left:   ox + int32(rc[0]*scale),
-			top:    oy + int32(rc[1]*scale),
-			right:  ox + int32((rc[0]+rc[2])*scale),
-			bottom: oy + int32((rc[1]+rc[3])*scale),
+	symbol := brandIconImage(logo, brandBlack, brandWhite)
+	for y := 0; y < logo; y++ {
+		for x := 0; x < logo; {
+			c := symbol.RGBAAt(x, y)
+			end := x + 1
+			for end < logo && symbol.RGBAAt(end, y) == c {
+				end++
+			}
+			if c.A != 0 {
+				brush, _, _ := pCreateSolidBrush.Call(uintptr(c.R) | uintptr(c.G)<<8 | uintptr(c.B)<<16)
+				r := rect{ox + int32(x), oy + int32(y), ox + int32(end), oy + int32(y+1)}
+				pFillRect.Call(hdc, uintptr(unsafe.Pointer(&r)), brush)
+				pDeleteObject.Call(brush)
+			}
+			x = end
 		}
-		pFillRect.Call(hdc, uintptr(unsafe.Pointer(&r)), white)
 	}
-	pDeleteObject.Call(white)
 
 	// Textes (blanc, fond transparent).
 	const transparent = 1

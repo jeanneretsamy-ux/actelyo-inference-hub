@@ -558,8 +558,8 @@ function setChatLoading(msg){
     _clHideTimer = setTimeout(()=>{ el.classList.remove('show'); _clShownAt = 0; }, wait);
     return;
   }
-  // Affichage : la marque « J » (favicon) en grand qui pulse (comme le compactage).
-  // Le SVG est déjà dans le HTML ; on garde le libellé en aria-label.
+  // Affichage : le symbole Actelyo (favicon) en grand qui pulse (comme le compactage).
+  // Le logo est déjà dans le HTML ; on garde le libellé en aria-label.
   clearTimeout(_clHideTimer); _clHideTimer = null;
   if(!_clShownAt) _clShownAt = Date.now();
   el.setAttribute('aria-label', msg);
