@@ -1,0 +1,1 @@
+Actelyo symbol extracted from ACTELYO-ERP `src/assets/actelyo-logo-nobg.png` (rectangle x=96, y=12, width=300, height=300), preserving original colours and alpha. Used by web, PWA, tray, splash and desktop icons.

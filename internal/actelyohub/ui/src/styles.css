@@ -1836,3 +1836,10 @@ button:hover{border-color:var(--dim);color:var(--text)}
 .xempty-i{font-size:30px;line-height:1;color:var(--dim);opacity:.7}
 
 #brand-word {font-size: 14px; font-family: inherit; letter-spacing: .08em;}
+
+/* Official Actelyo symbol in navigation, empty chat and generation status. */
+#brand-a{margin-right:8px}
+#brand img{width:28px;height:28px;object-fit:contain;display:block}
+#ce-logo img{width:40px;height:40px;object-fit:contain;display:block}
+#cl-logo{width:64px;height:64px;object-fit:contain}
+.genstatus img.jlogo{object-fit:contain}
