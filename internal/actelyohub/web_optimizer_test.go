@@ -124,7 +124,7 @@ func TestOptimizerNeverFollowsRedirect(t *testing.T) {
 	targetCalled := false
 	target := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) { targetCalled = true }))
 	defer target.Close()
-	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) { http.Redirect(w, r, target.URL, 302) }))
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) { http.Redirect(w, r, target.URL, http.StatusFound) }))
 	defer server.Close()
 	var result any
 	if optimizerRequest(context.Background(), server.URL, "secret", "/v1/models", nil, &result) == nil || targetCalled {
