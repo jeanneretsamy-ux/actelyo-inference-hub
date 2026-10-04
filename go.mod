@@ -1,4 +1,4 @@
-module github.com/nathaninline/ajean
+module github.com/jeanneretsamy-ux/actelyo-inference-hub
 
 go 1.25.0
 

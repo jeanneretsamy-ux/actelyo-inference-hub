@@ -1,0 +1,1197 @@
+<!doctype html>
+<!-- GÉNÉRÉ depuis ui/src/ par tools/assemble-ui (go generate ./internal/actelyohub) — NE PAS ÉDITER index.html DIRECTEMENT -->
+<html lang="fr"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<!-- PWA standalone : "Ajouter à l'écran d'accueil" sur iPhone → app plein écran
+     SANS la barre d'onglets Safari (indispensable pour enregistrer des démos). -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="ACTELYO INFERENCE HUB">
+<title>ACTELYO INFERENCE HUB</title>
+<!-- Favicon (même marque « actelyohub » que la landing/portail) + icône PWA (écran d'accueil
+     iOS). SVG inline pour le favicon, PNG 180×180 en data-URI pour apple-touch-icon
+     (iOS n'accepte pas le SVG pour l'icône d'accueil). Aucun fichier externe requis. -->
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'><rect width='12' height='12' rx='2' ry='2' fill='%23000'/><rect x='6' y='3' width='2' height='2' fill='%23fff'/><rect x='6' y='5' width='2' height='2' fill='%23fff'/><rect x='4' y='7' width='2' height='2' fill='%23fff'/></svg>">
+<link rel="apple-touch-icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALQAAAC0CAIAAACyr5FlAAABBUlEQVR42u3SAQkAAAwCQfuX3lI4GNxF0E8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIArU2NbcYhDHOIQhzgQB+JAHIgDcSAOxIE4xCEOcYhDHIgDcSAOxIE4EAfiQBziEIc4xCEOcYgDcSAOxIE4EAfiQBziEIc4xCEOcYgDcSAOxIE4EAfiQByIQxziEIc4xIE4EAfiQByIA3EgDsQhDnGIQxziEIc4EAfiQByIAxciDsSBOBAH4kAc4hCHOMQhDnGIA3EgDsSBOBAH4kAc4hCHOMQhDnGIA3EgDsSBOBAH4kAciEMc4hCHOMQBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADfLBHMhi4TnG6EAAAAAElFTkSuQmCC">
+<!-- Manifeste PWA (installabilité Android/desktop + Web Push). iOS s'appuie sur
+     les métas apple-* ci-dessus ; le manifeste ne le gêne pas. Servi à la racine
+     (web_server.go en local/tunnel, actelyohub-app sur app.inference.actelyo.example). -->
+<link rel="manifest" href="manifest.webmanifest">
+<!-- Marque le mode PWA AVANT le rendu : la hauteur de coque et le défilement du
+     document en dépendent (voir styles.css). ⚠️ On NE PEUT PAS se fier au média
+     `display-mode:standalone` : WebKit l'adosse au `display` du MANIFESTE, or cette
+     app n'en a pas (elle est en `apple-mobile-web-app-capable`) — en PWA iOS il
+     répond donc `browser`. `navigator.standalone` est le signal juste ici ; on
+     garde `display-mode` en second pour les PWA Android/desktop à manifeste. -->
+<script>try{var pwa=(window.navigator.standalone===true)||(window.matchMedia&&window.matchMedia('(display-mode:standalone)').matches)||(window.matchMedia&&window.matchMedia('(display-mode:fullscreen)').matches);document.documentElement.setAttribute('data-pwa',pwa?'1':'0');}catch(e){document.documentElement.setAttribute('data-pwa','0');}</script>
+<!-- Applique le thème AVANT le rendu (pas de flash) : lit le choix persisté. -->
+<script>try{var t=localStorage.getItem('actelyohub-theme')||'light';document.documentElement.setAttribute('data-theme',(t==='dark'||t.endsWith('-dark'))?'dark':'light');['hide-reasoning','hide-tools','fold-tools','hide-side'].forEach(function(k){document.documentElement.setAttribute('data-'+k,localStorage.getItem('actelyohub-'+k)==='1'?'1':'0')})}catch(e){document.documentElement.setAttribute('data-theme','light');}</script>
+<style>
+@@CSS@@
+</style></head><body>
+<button id="menubtn" onclick="toggleSide()">☰</button>
+<!-- Installation d'un moteur en cours : le détail vit dans le panneau, qui est
+     fermé sur téléphone. Sans ce rappel, un rechargement de page donnait
+     l'impression que l'installation avait disparu. -->
+<button id="lc-chip" onclick="lcChipOpen()" hidden></button>
+<div id="backdrop" onclick="toggleSide()"></div>
+<div class="side" id="side">
+  <div class="sidehead">
+    <h1 id="brand" aria-label="actelyohub"><span id="brand-a"><svg viewBox="0 0 4 5" shape-rendering="crispEdges" fill="currentColor"><rect x="1" y="0" width="2" height="1"/><rect x="0" y="1" width="1" height="1"/><rect x="3" y="1" width="1" height="1"/><rect x="0" y="2" width="4" height="1"/><rect x="0" y="3" width="1" height="1"/><rect x="3" y="3" width="1" height="1"/><rect x="0" y="4" width="1" height="1"/><rect x="3" y="4" width="1" height="1"/></svg></span><span id="brand-word">ACTELYO INFERENCE HUB</span><span id="ver" onclick="manualUpdateCheck()" style="cursor:pointer" title="vérifier les mises à jour" data-i18n="settings.check_update_title" data-i18n-attr="title"></span></h1>
+    <span id="status-svc" class="statuspill" onclick="toggleSvcLog()" title="voir le journal du moteur" data-i18n="sidebar.status_svc_title" data-i18n-attr="title"><span class="skel skel-line" style="width:52px;height:8px;border-radius:999px"></span></span>
+  </div>
+  <!-- Avertissement de lancement (App Translocation macOS) — masqué par défaut. -->
+  <div id="app-warn" class="muted" style="display:none;font-size:11px;line-height:1.5;margin:0 0 10px;padding:8px 10px;border-radius:8px;color:var(--warn);border:1px solid color-mix(in srgb,var(--warn) 45%,transparent);background:color-mix(in srgb,var(--warn) 12%,transparent)"></div>
+  <!-- Accès distant (app.inference.actelyo.example / *.inference.actelyo.example) : le front est toujours à jour
+       mais le serveur local peut être ancien. Bandeau passif si une mise à jour existe. -->
+  <div id="server-stale" style="display:none;font-size:11px;line-height:1.5;margin:0 0 10px;padding:8px 10px;border-radius:8px;color:var(--warn);border:1px solid color-mix(in srgb,var(--warn) 45%,transparent);background:color-mix(in srgb,var(--warn) 12%,transparent)"></div>
+  <div id="model-err" style="display:none;font-size:11px;line-height:1.5;margin:0 0 10px;padding:8px 10px;border-radius:8px;color:var(--err);border:1px solid color-mix(in srgb,var(--err) 45%,transparent);background:color-mix(in srgb,var(--err) 12%,transparent)"></div>
+  <!-- Anciens flags mémoire (--mlock/--no-mmap) sur un moteur llama.cpp récent qui attend --load-mode : le serveur démarre quand même (traduits au lancement), ce bandeau propose de nettoyer la config. -->
+  <div id="loadflags-fix" style="display:none;font-size:11px;line-height:1.5;margin:0 0 10px;padding:8px 10px;border-radius:8px;color:var(--warn);border:1px solid color-mix(in srgb,var(--warn) 45%,transparent);background:color-mix(in srgb,var(--warn) 12%,transparent)">
+    <span data-i18n="loadflags.notice">La nouvelle version de llama.cpp a changé les options mémoire : <code>--mlock</code> / <code>--no-mmap</code> sont remplacés par <code>--load-mode</code>. D'anciens flags ont été détectés dans ta configuration.</span>
+    <span style="white-space:nowrap">&nbsp;<span id="loadflags-btn" onclick="migrateLoadFlags()" style="cursor:pointer;text-decoration:underline;font-weight:600" data-i18n="loadflags.btn">Mettre à jour les flags</span></span>
+  </div>
+  <!-- Journal du moteur : replié par défaut, ouvert au clic sur la pastille d'état.
+       C'est le seul endroit où l'on voit pourquoi un modèle refuse de charger. -->
+  <div id="svc-log-box" style="display:none;margin:0 0 10px">
+    <div class="row" style="justify-content:space-between;align-items:center">
+      <span class="io-cap" data-i18n="sidebar.svc_log_title">Journal du moteur</span>
+      <span class="row" style="gap:6px">
+        <button id="svc-log-copy" onclick="copySvcLog(this)" title="copier le journal" data-i18n="sidebar.svc_log_copy_title" data-i18n-attr="title"><span data-i18n="sidebar.svc_log_copy_button">copier</span></button>
+        <button onclick="loadSvcLog()" title="rafraîchir" data-i18n="sidebar.svc_log_refresh_title" data-i18n-attr="title">↻</button>
+      </span>
+    </div>
+    <pre id="svc-log" class="muted" style="font-size:10px;line-height:1.45;max-height:220px;overflow:auto;white-space:pre-wrap;word-break:break-word;margin:6px 0 0"></pre>
+    <!-- Emplacements : au même endroit que le journal, c'est le panneau où l'on
+         va quand on cherche à comprendre l'état de son installation. -->
+    <div class="row" style="justify-content:space-between;align-items:center;margin-top:12px">
+      <span class="io-cap" data-i18n="sidebar.paths_title">Emplacements</span>
+    </div>
+    <div id="paths-msg" class="muted" style="font-size:10px;line-height:1.5"></div>
+  </div>
+  <!-- GPU et RAM décrivent la même chose (les ressources de la machine) :
+       une seule section, deux blocs de statistique dans la même carte. -->
+  <details open><summary><span class="stitle" data-i18n="device.title">Device</span></summary>
+    <div class="slist">
+      <div id="vram"><div class="stat"><div class="stat-h"><span class="skel skel-line" style="width:46%"></span><span class="skel skel-line" style="width:30%"></span></div><div class="skel skel-bar"></div><span class="skel skel-line" style="width:54%;height:9px"></span></div></div>
+      <div id="ram-details"><div id="ram"><div class="stat"><div class="stat-h"><span class="skel skel-line" style="width:30%"></span><span class="skel skel-line" style="width:34%"></span></div><div class="skel skel-bar"></div><span class="skel skel-line" style="width:38%;height:9px"></span></div></div></div>
+    </div>
+  </details>
+  <details open id="cfg-details"><summary><span class="stitle" data-i18n="config.title">Configuration</span></summary>
+    <div id="cfg" class="slist"><div class="kv"><span class="skel skel-line" style="width:30%"></span><span class="skel skel-line" style="width:44%"></span></div><div class="kv"><span class="skel skel-line" style="width:24%"></span><span class="skel skel-line" style="width:52%"></span></div><div class="kv"><span class="skel skel-line" style="width:34%"></span><span class="skel skel-line" style="width:38%"></span></div><div class="kv"><span class="skel skel-line" style="width:28%"></span><span class="skel skel-line" style="width:30%"></span></div></div>
+  </details>
+  <details><summary><span class="stitle" data-i18n="presets.title">Presets</span><button class="preset-ext" onclick="event.preventDefault();event.stopPropagation();openExternal('')" title="ajouter une API externe" data-i18n="presets.add_external_button" data-i18n-attr="title"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></button><button class="preset-add" onclick="event.preventDefault();event.stopPropagation();openPreset('')" title="ajouter" data-i18n="presets.add_button" data-i18n-attr="title">+</button></summary>
+    <div class="slist"><div id="presets" class="rowlist"></div></div>
+  </details>
+  <details><summary><span class="stitle" data-i18n="agent.title">Agent</span><span id="agent-badge" class="sbadge"></span></summary>
+    <div class="slist"><label class="switchrow"><span class="switch"><input type="checkbox" id="agent-toggle" onchange="toggleAgent()"><span class="slider"></span></span> <span data-i18n="agent.enable_toggle">activer le mode agent</span><span class="help" tabindex="0" onclick="event.preventDefault();event.stopPropagation();this.classList.toggle('open')">?<span class="tip" data-i18n="agent.enable_help" data-i18n-html>⚠ active l'<b>accès machine</b> (shell complet via <b>bash</b> sur le serveur) — l'IA peut inspecter, lancer des scripts, écrire/lire/éditer des fichiers (timeout 30s, max 300s). Mémoire et accès internet ci-dessous ne fonctionnent que si le mode agent est activé.</span></span></label></div>
+    <!-- Sous-réglages du mode agent. MÊME gabarit que « Machine » / « Apparence » :
+         étiquette de groupe nue, puis UNE carte de lignes (.slist). Le groupe
+         entier est grisé/inerte quand l'agent est off (voir setAgentGate). -->
+    <div id="net-block" class="gated-group">
+      <div class="subhead"><span data-i18n="internet.title">Accès internet</span><span id="internet-badge" class="sbadge"></span><span class="help" tabindex="0" onclick="event.preventDefault();event.stopPropagation();this.classList.toggle('open')">?<span class="tip" data-i18n="internet.help" data-i18n-html>Ajoute les outils <b>web_search / web_open / web_read / web_grep</b>. Le moteur <b>intégré</b> ne demande aucune installation. Le moteur <b>Crawl4AI</b> exige un serveur que tu héberges toi-même (ex. <code>docker run -d -p 11235:11235 --shm-size=1g unclecode/crawl4ai:latest</code>) mais exécute le JavaScript des pages. Actifs seulement si le <b>mode agent</b> est actif.</span></span></div>
+      <div class="slist">
+        <label class="switchrow"><span class="switch"><input type="checkbox" id="internet-toggle" onchange="toggleInternet()"><span class="slider"></span></span> <span data-i18n="internet.toggle_label">donner internet à l'IA</span></label>
+        <!-- Moteur web : « go » = intégré au binaire (rien à installer, pas de rendu
+             JavaScript) · « crawl4ai » = serveur externe avec Chromium headless.
+             Réglages propres à Crawl4AI masqués avec le moteur intégré ; l'URL et
+             la clé s'enregistrent en quittant le champ (onchange). -->
+        <div class="rowbody">
+          <div class="row" style="margin:0">
+            <select id="web-engine" class="sctl" onchange="saveWebEngine()">
+              <option value="go" data-i18n="internet.engine_builtin">Moteur Intégré</option>
+              <option value="crawl4ai" data-i18n="internet.engine_crawl4ai">Crawl4AI</option>
+            </select>
+          </div>
+          <!-- Masqués AU DÉPART : le moteur par défaut est l'intégré, et ces champs
+               ne concernent que Crawl4AI. Affichés d'emblée puis repliés par le
+               chargement de l'état, ils faisaient sauter la section sous les yeux. -->
+          <div id="crawl-fields" style="display:none">
+            <div class="row">
+              <input id="crawl-url" type="text" placeholder="http://localhost:11235" class="sctl" onchange="saveCrawlUrl()">
+            </div>
+            <!-- Clé d'accès du serveur Crawl4AI (facultative) : envoyée en
+                 « Authorization: Bearer … ». Jamais relue par l'API, on n'affiche
+                 qu'un indice sur les 4 derniers caractères. -->
+            <div class="row">
+              <input id="crawl-key" type="password" autocomplete="off" placeholder="clé API (si le serveur en exige une)" class="sctl" onchange="saveCrawlKey()" data-i18n="internet.crawl_key_placeholder" data-i18n-attr="placeholder">
+              <button id="crawl-key-clear" onclick="clearCrawlKey()" style="display:none" data-i18n="internet.crawl_key_clear">retirer</button>
+            </div>
+            <div class="muted" style="font-size:11px;margin-top:4px" data-i18n="internet.autosave_hint">enregistré automatiquement en quittant le champ</div>
+            <div id="crawl-key-state" class="muted" style="font-size:11px;margin-top:3px"></div>
+          </div>
+          <div id="internet-status" class="muted" style="font-size:11px;margin-top:4px"></div>
+        </div>
+      </div>
+    </div>
+    <div id="mcp-block" class="gated-group">
+      <div class="subhead"><span data-i18n="mcp.title">MCP servers</span><span id="mcp-badge" class="sbadge"></span><span class="help" tabindex="0" onclick="event.preventDefault();event.stopPropagation();this.classList.toggle('open')">?<span class="tip" data-i18n="mcp.help" data-i18n-html>Connecte des <b>serveurs MCP</b> (Model Context Protocol) pour donner de nouveaux outils à l'IA : accès fichiers, bases de données, APIs métier… <b>stdio</b> = programme lancé localement (npx/uvx/binaire) · <b>http</b> = serveur distant. ⚠ un serveur stdio exécute du code sur cette machine, au même titre que le shell.</span></span></div>
+      <div class="slist">
+        <div class="rowbody">
+          <!-- Même texte que celui rendu après chargement quand il n'y a aucun
+               serveur : sinon la carte partait vide puis grandissait d'une ligne. -->
+          <div id="mcp-list" class="mcp-list"><div class="muted" style="font-size:12px" data-i18n="mcp.empty_list">(aucun serveur — ajoute un serveur fichiers, une base de données, une API…)</div></div>
+          <button class="addbtn" style="margin-top:6px" onclick="openMcp('')" data-i18n="mcp.add_button">+ ajouter un serveur</button>
+        </div>
+      </div>
+    </div>
+    <!-- Paramètres : compactage + machines sont gatés PAR LIGNE (classe agent-gated,
+         grisées quand le mode agent est off) ; la notification, elle, marche toujours
+         donc n'est PAS gatée — mais elle vit dans la MÊME carte, collée aux deux autres.
+         Le gate est par ligne et non sur un wrapper car les séparateurs/rembourrages
+         exigent que les .switchrow soient enfants DIRECTS de .slist. -->
+    <div class="subhead" data-i18n="agent.settings_subhead">Paramètres</div>
+    <div class="slist">
+        <label class="switchrow agent-gated"><span class="switch"><input type="checkbox" id="compact-toggle" onchange="toggleCompact()"><span class="slider"></span></span> <span data-i18n="agent.compact_toggle">compactage automatique du contexte</span><span class="help" tabindex="0" onclick="event.preventDefault();event.stopPropagation();this.classList.toggle('open')">?<span class="tip" data-i18n="agent.compact_help" data-i18n-html>activé par défaut : quand la conversation approche de la limite de contexte, les vieux tours sont résumés automatiquement (façon Hermes) au lieu de t'imposer un « vider ». Discussions quasi illimitées sans perdre le fil.</span></span></label>
+        <label class="switchrow"><span class="switch"><input type="checkbox" id="push-toggle" onchange="togglePush()"><span class="slider"></span></span> <span data-i18n="agent.push_toggle">me prévenir quand la réponse est prête</span><span class="help" tabindex="0" onclick="event.preventDefault();event.stopPropagation();this.classList.toggle('open')">?<span class="tip" data-i18n="agent.push_help" data-i18n-html>Le serveur t'envoie une <b>notification</b> à la fin de chaque réponse, même l'app fermée ou le téléphone verrouillé. Sur iPhone : <b>ajoute d'abord ACTELYO INFERENCE HUB à l'écran d'accueil</b> puis active depuis l'app installée. À régler sur chaque appareil.</span></span></label>
+        <!-- Chiffrement (off par défaut) : UN seul interrupteur. Chiffre la mémoire
+             ET les conversations. Ton mot de passe ouvre le coffre, ton navigateur
+             le retient (déverrouillage auto ensuite), le serveur ne peut jamais
+             déchiffrer seul. Le corps (état + bouton déverrouiller) ne s'affiche
+             que lorsque c'est actif. -->
+        <label class="switchrow"><span class="switch"><input type="checkbox" id="mem-enc-toggle" onchange="toggleMemEncrypt()"><span class="slider"></span></span> <span data-i18n="agent.encrypt_toggle">activer le chiffrement</span><span class="help" tabindex="0" onclick="event.preventDefault();event.stopPropagation();this.classList.toggle('open')">?<span class="tip" data-i18n="agent.encrypt_help" data-i18n-html>Chiffre ta <b>mémoire</b> ET tes <b>conversations</b> au repos (AES-256), protégées par ta <b>clé d'accès</b> : si tu as accès à l'interface, c'est déjà déverrouillé ; sinon on te demande ta clé d'accès. Une <b>clé de récupération</b> t'est donnée à l'activation (garde-la). Rien n'est perdu : snapshots automatiques avant chaque bascule.</span></span></label>
+    </div>
+  </details>
+  <details id="tasks-details"><summary><span class="stitle" data-i18n="tasks.title">Tasks</span><span id="tasks-badge" class="sbadge"></span></summary>
+    <!-- Tâches planifiées : l'IA exécute une consigne toute seule sur une
+         fréquence réglable (voir tasks.go). Chaque tâche tourne ISOLÉE de la
+         conversation — elle livre son résultat via les outils de l'IA (mail via
+         MCP, shell…). D'où l'avertissement quand le mode agent est off : sans
+         lui, aucune tâche ne peut agir. -->
+    <div class="slist">
+      <label class="switchrow"><span class="switch"><input type="checkbox" id="tasks-pause-toggle" onchange="toggleTasksPause()"><span class="slider"></span></span> <span data-i18n="tasks.pause_toggle">suspendre toutes les tâches</span><span class="help" tabindex="0" onclick="event.preventDefault();event.stopPropagation();this.classList.toggle('open')">?<span class="tip" data-i18n="tasks.pause_help" data-i18n-html>Interrupteur maître : coche pour que plus aucune tâche ne se déclenche. Les tâches gardent leur réglage et repartent quand tu décoches.</span></span></label>
+    </div>
+    <div id="tasks-agent-warn" class="muted" style="display:none;font-size:12px;line-height:1.5;margin:8px 2px" data-i18n="tasks.agent_warn" data-i18n-html>Le <b>mode agent</b> est désactivé : les tâches s'exécuteront mais l'IA n'aura <b>aucun outil</b> pour agir (envoyer un mail, lire des fichiers…). Active le mode agent ci-dessus.</div>
+    <div class="slist">
+      <div class="rowbody">
+        <div id="tasks-list" class="mcp-list"><div class="muted" style="font-size:12px" data-i18n="tasks.empty_list">(aucune tâche)</div></div>
+        <button class="addbtn" style="margin-top:6px" onclick="openTask('')" data-i18n="tasks.add_button">+ ajouter une tâche</button>
+      </div>
+    </div>
+  </details>
+  <details><summary><span class="stitle" data-i18n="appearance.title">Appearance</span></summary>
+    <div class="slist">
+      <label class="switchrow rev"><span data-i18n="appearance.dark_mode">mode sombre</span>
+        <span class="switch"><input type="checkbox" id="theme-dark" onchange="toggleThemeDark()"><span class="slider"></span></span>
+      </label>
+      <label class="switchrow rev"><span data-i18n="appearance.language">Langue</span>
+        <select id="lang-select" onchange="setLang(this.value)"></select>
+      </label>
+    </div>
+    <div class="subhead" data-i18n="appearance.display_subhead">Affichage</div>
+    <div class="slist">
+    <label class="switchrow"><span class="switch"><input type="checkbox" id="view-hide-reasoning" onchange="toggleView('hide-reasoning')"><span class="slider"></span></span> <span data-i18n="appearance.hide_reasoning">masquer le raisonnement</span></label>
+    <label class="switchrow"><span class="switch"><input type="checkbox" id="view-hide-tools" onchange="toggleView('hide-tools')"><span class="slider"></span></span> <span data-i18n="appearance.hide_tools">masquer les appels d'outils</span></label>
+    <label class="switchrow"><span class="switch"><input type="checkbox" id="view-fold-tools" onchange="toggleView('fold-tools')"><span class="slider"></span></span> <span data-i18n="appearance.fold_tools">garder les bulles repliées</span><span class="help" tabindex="0" onclick="event.preventDefault();event.stopPropagation();this.classList.toggle('open')">?<span class="tip" data-i18n="appearance.fold_tools_help" data-i18n-html>Les bulles de raisonnement et d'outil arrivent <b>déjà fermées</b> au lieu de s'ouvrir puis se refermer. Un clic sur leur étiquette les déplie.</span></span></label>
+    <label class="switchrow"><span class="switch"><input type="checkbox" id="view-hide-side" onchange="toggleView('hide-side')"><span class="slider"></span></span> <span data-i18n="appearance.hide_side">barre latérale escamotable</span><span class="help" tabindex="0" onclick="event.preventDefault();event.stopPropagation();this.classList.toggle('open')">?<span class="tip" data-i18n="appearance.hide_side_help" data-i18n-html>La barre latérale devient un tiroir <b>même sur ordinateur</b> : elle reste fermée et s'ouvre avec le bouton ☰. Toute la largeur pour la conversation.</span></span></label>
+    <label class="switchrow"><span class="switch"><input type="checkbox" id="view-enter-newline" onchange="toggleView('enter-newline')"><span class="slider"></span></span> <span data-i18n="appearance.enter_newline">Entrée = retour à la ligne</span><span class="help" tabindex="0" onclick="event.preventDefault();event.stopPropagation();this.classList.toggle('open')">?<span class="tip" data-i18n="appearance.enter_newline_help" data-i18n-html>Par défaut, <b>Entrée</b> envoie le message et <b>Maj+Entrée</b> fait un retour à la ligne. Activez ceci pour inverser : Entrée va à la ligne, et <b>Maj+Entrée</b> (ou Ctrl+Entrée) envoie.</span></span></label>
+    <label class="switchrow"><span class="switch"><input type="checkbox" id="view-hide-preset" onchange="toggleView('hide-preset')"><span class="slider"></span></span> <span data-i18n="appearance.hide_preset">masquer le nom du preset</span><span class="help" tabindex="0" onclick="event.preventDefault();event.stopPropagation();this.classList.toggle('open')">?<span class="tip" data-i18n="appearance.hide_preset_help" data-i18n-html>Retire le nom du preset de la ligne d'état sous chaque réponse (durée, tokens, vitesse). Les autres informations restent affichées.</span></span></label>
+    </div>
+  </details>
+  <details><summary><span class="stitle" data-i18n="api.title">API</span></summary>
+    <div class="subhead"><span data-i18n="api.endpoint_subhead">Endpoint compatible OpenAI</span><span class="help" tabindex="0" onclick="event.preventDefault();event.stopPropagation();this.classList.toggle('open')">?<span class="tip" data-i18n="api.endpoint_help" data-i18n-html>Branchez n'importe quel client compatible OpenAI (OpenCode, Continue, Cursor…) sur ces adresses. Si une clé est définie, le client doit envoyer <code>Authorization: Bearer &lt;clé&gt;</code>.</span></span></div>
+    <!-- UNE carte pour tout l'endpoint : adresse locale, bascule « public » et
+         adresse publique sont un seul sujet — trois cartes accolées donnaient
+         trois îlots pour un même réglage. -->
+    <div class="slist">
+      <div class="rowbody">
+        <div class="muted" style="margin:0 0 6px" data-i18n="api.local_address_label" data-i18n-html>Adresse locale (réseau) — modèle <code>actelyohub</code></div>
+        <div class="row" style="margin:0">
+          <input id="oai-url" readonly class="io-input">
+          <button class="iconbtn" onclick="copyText(document.getElementById('oai-url').value,'adresse copiée')" title="copier" data-i18n="api.copy_title" data-i18n-attr="title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2.5"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg></button>
+        </div>
+      </div>
+      <!-- L'adresse ci-dessus ne sert à RIEN si le moteur n'écoute que sur la
+           boucle locale (le défaut sous Windows) : le chat du navigateur marche,
+           mais aucun logiciel du réseau ne peut s'y brancher. Cet interrupteur
+           règle HOST et pose la règle de pare-feu, voir sys_network.go. -->
+      <label class="switchrow septop"><span class="switch"><input type="checkbox" id="lan-toggle" onchange="toggleLAN()"><span class="slider"></span></span> <span data-i18n="api.lan_toggle">joignable depuis le réseau local</span><span class="help" tabindex="0" onclick="event.preventDefault();event.stopPropagation();this.classList.toggle('open')">?<span class="tip" data-i18n="api.lan_help" data-i18n-html>Éteint, le moteur n'écoute que sur <b>cette machine</b> : l'adresse ci-dessus ne répond qu'ici. Allumez-le pour brancher un logiciel depuis un autre ordinateur du réseau (sous Windows, la règle de pare-feu est posée en même temps). <b>Redémarre le moteur.</b></span></span></label>
+      <div id="lan-warn" class="rowbody" style="display:none"></div>
+      <label class="switchrow" hidden><span class="switch"><input type="checkbox" id="oai-public-toggle" onchange="toggleOAIPublic()"><span class="slider"></span></span> <span data-i18n="api.public_toggle">exposer en public (inference.actelyo.example)</span><span class="help" tabindex="0" onclick="event.preventDefault();event.stopPropagation();this.classList.toggle('open')">?<span class="tip" data-i18n="api.public_help" data-i18n-html>Rend votre IA joignable depuis <b>n'importe où</b> via <code>https://&lt;machine&gt;.oai.inference.actelyo.example/v1</code> (pour brancher un SaaS). Le trafic est chiffré <b>de bout en bout</b> jusqu'à ce serveur — le relais inference.actelyo.example ne voit rien. Nécessite l'accès distant actif.</span></span></label>
+      <div hidden id="oai-public-wrap" class="rowbody" style="display:none">
+        <div class="muted" style="margin:0 0 6px" data-i18n="api.public_address_label">Adresse publique — chiffrée de bout en bout, accessible partout</div>
+        <div class="row" style="margin:0">
+          <input id="oai-public-url" readonly class="io-input">
+          <button class="iconbtn" onclick="copyText(document.getElementById('oai-public-url').value,'adresse publique copiée')" title="copier" data-i18n="api.copy_title" data-i18n-attr="title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2.5"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg></button>
+        </div>
+      </div>
+    </div>
+    <div class="subhead"><span data-i18n="api.key_subhead">Clé API</span><span class="help" tabindex="0" onclick="event.preventDefault();event.stopPropagation();this.classList.toggle('open')">?<span class="tip" data-i18n="api.key_help" data-i18n-html>Protège l'endpoint des complétions (llama-server). Indispensable avant d'exposer le serveur sur internet. Modifier la clé <b>redémarre</b> le service.</span></span></div>
+    <div class="slist"><div class="rowbody">
+      <div class="row" style="margin:0">
+        <input id="oai-key" readonly class="io-input">
+        <button id="oai-key-eye" onclick="toggleKeyReveal()" title="afficher / masquer" data-i18n="api.key_eye_title" data-i18n-attr="title"><span data-i18n="api.key_eye_text">afficher</span></button>
+        <button class="iconbtn" onclick="copyApiKey()" title="copier la clé" data-i18n="api.key_copy_title" data-i18n-attr="title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2.5"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg></button>
+      </div>
+      <div class="row" style="margin-bottom:0">
+        <button onclick="apiKeyAction('generate')" data-i18n="api.key_generate">générer</button>
+        <button onclick="apiKeySet()" data-i18n="api.key_set">définir…</button>
+        <button onclick="apiKeyAction('clear')" data-i18n="api.key_clear">retirer</button>
+      </div>
+    </div></div>
+  </details>
+  <details id="remote-details" hidden><summary><span class="stitle" data-i18n="link.title">ACTELYO INFERENCE HUB LINK</span><span id="remote-badge" class="sbadge"></span></summary>
+    <div class="subhead"><span data-i18n="link.remote_subhead">Accès distant</span><span class="help" tabindex="0" onclick="event.preventDefault();event.stopPropagation();this.classList.toggle('open')">?<span class="tip" data-i18n="link.remote_help" data-i18n-html>Accédez à ce serveur ACTELYO INFERENCE HUB depuis <b>n'importe où</b>, sans ouvrir de port, à travers le relais <b>inference.actelyo.example</b>. Le trafic est chiffré de <b>bout en bout</b> : le relais ne voit rien. Abonnement 4,80 €/mois.</span></span></div>
+    <!-- Non connecté : on met en avant les avantages de l'abonnement ACTELYO INFERENCE HUB LINK pour
+         donner envie de s'abonner, puis le bouton (tout se passe dans la popup). -->
+    <div id="remote-off" class="slist"><div class="rowbody">
+      <div class="link-perks-head" data-i18n="link.perks_heading">Passez à ACTELYO INFERENCE HUB LINK</div>
+      <div class="link-perks">
+        <div class="link-perk">
+          <span class="link-perk-i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span>
+          <div><div class="link-perk-t" data-i18n="link.perk_remote_t">Accès distant sécurisé</div><div class="link-perk-d" data-i18n="link.perk_remote_d">Accédez à votre serveur ACTELYO INFERENCE HUB depuis n'importe où et depuis n'importe quelle application, chiffré de bout en bout — le relais ne voit rien.</div></div>
+        </div>
+        <div class="link-perk">
+          <span class="link-perk-i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span>
+          <div><div class="link-perk-t" data-i18n="link.perk_support_t">Support dédié par chat</div><div class="link-perk-d" data-i18n="link.perk_support_d">Une messagerie dédiée pour répondre à toutes vos questions, directement depuis l'application.</div></div>
+        </div>
+        <div class="link-perk">
+          <span class="link-perk-i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span>
+          <div><div class="link-perk-t" data-i18n="link.perk_backup_t">Sauvegarde intégrée</div><div class="link-perk-d" data-i18n="link.perk_backup_d">Vos réglages, presets, historique et mémoire sauvegardés automatiquement, chiffrés avant l'envoi.</div></div>
+        </div>
+      </div>
+      <p class="muted" style="margin:0 0 8px" data-i18n="link.remote_off_desc">Ouvrez l'accès distant à ce serveur en quelques clics, sans terminal.</p>
+      <button onclick="remoteConnect()" style="border-color:var(--accent);color:var(--accent)" data-i18n="link.connect_button">Connecter à inference.actelyo.example</button>
+      <div class="link-price" data-i18n="link.price_note">4,80 €/mois · sans engagement, résiliable à tout moment</div>
+    </div></div>
+    <!-- Connecté : URL publique + appairage + déconnexion. Le bouton « démarrer
+         le tunnel » vit DANS la carte de l'adresse : c'est l'action de cette
+         ligne, il flottait auparavant entre deux cartes. -->
+    <div id="remote-on" style="display:none">
+      <div class="slist"><div class="rowbody">
+        <div class="muted" style="margin:0 0 6px" data-i18n="link.remote_address_label">Votre adresse d'accès distant</div>
+        <div class="row" style="margin:0">
+          <input id="remote-url" readonly class="io-input">
+          <button class="iconbtn" onclick="copyText(document.getElementById('remote-url').value,'adresse copiée')" title="copier" data-i18n="link.copy_title" data-i18n-attr="title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2.5"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg></button>
+          <button class="iconbtn" onclick="window.open(document.getElementById('remote-url').value,'_blank')" title="ouvrir" data-i18n="link.open_title" data-i18n-attr="title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><path d="M15 3h6v6"/><path d="M10 14L21 3"/></svg></button>
+        </div>
+        <div id="remote-status" class="muted" style="margin-top:6px"></div>
+        <div class="row" style="margin-bottom:0"><button id="remote-start" onclick="remoteStart()" style="display:none;border-color:var(--accent);color:var(--accent)" data-i18n="link.start_tunnel">démarrer le tunnel</button></div>
+      </div></div>
+      <div id="remote-firstconn">
+      <div class="subhead"><span data-i18n="link.first_connection_subhead">Première connexion</span><span class="help" tabindex="0" onclick="event.preventDefault();event.stopPropagation();this.classList.toggle('open')">?<span class="tip" data-i18n="link.first_connection_help" data-i18n-html>À votre première ouverture du portail distant, confirmez l'<b>empreinte</b> et saisissez le <b>code d'appairage</b> : cela verrouille la boîte noire sur CE serveur (anti-interception). Une seule fois par appareil.</span></span></div>
+      <div class="slist"><div class="rowbody">
+        <div class="row" style="margin:0"><button onclick="remotePairCode()" data-i18n="link.show_pairing">Afficher l'empreinte et le code d'appairage</button></div>
+        <div id="remote-pair" class="muted" style="display:none;margin-top:6px"></div>
+        <div class="row" style="margin-bottom:0"><button onclick="remoteDisconnect()" class="btn-danger-o" data-i18n="link.disconnect">déconnecter l'accès distant</button></div>
+      </div></div>
+      </div>
+    </div>
+    <!-- Sauvegarde inference.actelyo.example (abonnés) : mémoire + presets + réglages, chiffrés
+         côté serveur avant l'envoi, relais aveugle. Bloc entier masqué si le
+         serveur n'est pas lié à un compte inference.actelyo.example. Rangé ici, dans la section
+         actelyohub link, car c'est une fonctionnalité du relais. -->
+    <div id="backup-block" style="display:none">
+      <div class="subhead"><span data-i18n="link.backup_subhead">Sauvegarde</span><span id="backup-badge" class="sbadge"></span><span class="help" tabindex="0" onclick="event.preventDefault();event.stopPropagation();this.classList.toggle('open')">?<span class="tip" data-i18n="link.backup_help" data-i18n-html>Sauvegarde ta mémoire, tes presets et tes réglages sur inference.actelyo.example. Tout est <b>chiffré sur ton serveur avant l'envoi</b> : le relais ne voit qu'un blob opaque, illisible même s'il était piraté. Restaurable sur un serveur vierge avec ton mot de passe de sauvegarde.</span></span></div>
+      <div class="slist">
+        <label class="switchrow"><span class="switch"><input type="checkbox" id="backup-auto-toggle" onchange="toggleBackupAuto()"><span class="slider"></span></span> <span data-i18n="link.backup_auto_toggle">sauvegarde automatique quotidienne</span></label>
+        <div class="rowbody">
+          <div id="backup-status" class="muted" style="font-size:12px;line-height:1.5"></div>
+          <div class="row" style="margin-top:8px">
+            <button onclick="backupNow()" data-i18n="link.backup_now">Sauvegarder maintenant</button>
+            <button onclick="backupRestore()" data-i18n="link.backup_restore">Restaurer…</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Rappel discret des avantages inclus (compte connecté). En footer de TOUTE la
+         section ACTELYO INFERENCE HUB LINK, pas coincé entre deux cartes : piloté par renderRemote. -->
+    <div id="remote-perks-mini" class="link-perks-mini" style="display:none" data-i18n="link.perks_mini" data-i18n-html>Inclus dans <b>ACTELYO INFERENCE HUB LINK</b> : accès distant chiffré de bout en bout · support dédié par chat · sauvegarde de vos réglages, presets, historique et mémoire.</div>
+  </details>
+  <details id="lc-details"><summary><span class="stitle" data-i18n="engine.title">Engine</span></summary>
+    <!-- Une seule carte : état, choix du mode et journal d'installation sont le
+         même sujet. Les trois modes sont des LIGNES de cette carte (elles
+         étaient des cartes dans une carte). -->
+    <div class="slist">
+    <!-- La pastille « conseillé » n'est PAS écrite ici : le bon choix dépend de
+         la machine (voir lcRenderReco). Sur Linux + NVIDIA le précompilé ne
+         donne que du Vulkan — llama.cpp ne publie aucun binaire CUDA Linux —
+         alors que compiler donne du CUDA natif. -->
+    <div class="lc-modes">
+      <div class="lc-mode" id="lc-mode-fast" onclick="lcPick('fast')">
+        <div class="lc-mode-t"><span data-i18n="engine.mode_fast_title">llama.cpp précompilé</span> <span class="lc-reco" id="lc-reco-fast" hidden data-i18n="engine.mode_recommended">conseillé</span></div>
+        <div class="lc-mode-d" id="lc-desc-fast" data-i18n="engine.mode_fast_desc">binaire officiel téléchargé tel quel, prêt en ~2 min</div>
+        <div class="lc-mode-state" id="lc-fast-state"></div>
+      </div>
+      <div class="lc-mode" id="lc-mode-opt" onclick="lcPick('opt')">
+        <div class="lc-mode-t"><span data-i18n="engine.mode_opt_title">llama.cpp compilé</span> <span class="lc-reco" id="lc-reco-opt" hidden data-i18n="engine.mode_recommended">conseillé</span></div>
+        <div class="lc-mode-d" id="lc-desc-opt" data-i18n="engine.mode_opt_desc">compilé ici pour votre machine — plus rapide, plus long à installer</div>
+        <div class="lc-mode-state" id="lc-opt-state"></div>
+      </div>
+      <div class="lc-mode" id="lc-mode-custom" onclick="openCustomBackends()">
+        <div class="lc-mode-t" data-i18n="engine.mode_custom_title">llama.cpp personnalisé</div>
+        <div class="lc-mode-d" data-i18n="engine.mode_custom_desc">un fork de llama.cpp pour modèles spéciaux (quant ternaire…)</div>
+        <div class="lc-mode-state" id="lc-custom-state"></div>
+      </div>
+    </div>
+    <div id="lc-job" class="rowbody" style="display:none">
+      <div style="display:flex;align-items:center;gap:8px">
+        <div id="lc-job-phase" style="font-size:12px;display:flex;align-items:center;gap:6px;flex:1;min-width:0"></div>
+        <button id="lc-job-cancel" type="button" class="lc-update-link" hidden onclick="lcCancelJob()" data-i18n="engine.job_cancel">arrêter</button>
+        <button id="lc-job-dismiss" type="button" class="lc-update-link" hidden onclick="lcDismissJob()" data-i18n="engine.job_dismiss">masquer</button>
+      </div>
+      <div class="lc-logbar" onclick="lcToggleLog()"><span id="lc-log-caret">▸</span> <span data-i18n="engine.job_details">détails</span></div>
+      <pre id="lc-log" hidden></pre>
+    </div>
+    </div>
+    <!-- Ces trois boutons pilotent le service qui fait tourner llama-server :
+         leur place est ici, avec le moteur, et pas dans une section « Service »
+         à part qui ne contenait qu'eux. -->
+    <div class="subhead"><span data-i18n="engine.service_subhead">Service du moteur</span><span class="help" tabindex="0" onclick="event.preventDefault();event.stopPropagation();this.classList.toggle('open')">?<span class="tip" data-i18n="engine.service_help" data-i18n-html>Démarre, redémarre ou arrête <b>llama-server</b> — le processus qui charge le modèle et répond. Un redémarrage recharge le modèle du preset actif (quelques secondes à quelques minutes selon sa taille).</span></span></div>
+    <div class="slist"><div class="rowbody">
+      <div class="row" style="margin:0">
+        <button onclick="act('start')" data-i18n="engine.service_start">démarrer</button>
+        <button onclick="act('restart')" data-i18n="engine.service_restart">redémarrer</button>
+        <button onclick="act('stop')" data-i18n="engine.service_stop">arrêter</button>
+      </div>
+    </div></div>
+  </details>
+  <!-- Section « Actions » retirée : la MAJ s'affiche automatiquement dans le bandeau
+       du bas (vérif manuelle possible en cliquant le n° de version), « nouvelle
+       conversation » et « exporter » vivent dans le hub Projets, et le bench a
+       rejoint le modal du preset (visible seulement pour le preset actif). -->
+  <!-- Bandeau discret « nouvelle version ACTELYO INFERENCE HUB disponible », collé en bas du menu.
+       Rempli et affiché par checkAppUpdate (05-status.js) en accès LOCAL ; en accès
+       distant c'est #server-stale (en haut) qui joue ce rôle. -->
+  <div id="app-update" class="app-update" hidden onclick="onAppUpdateClick()"></div>
+</div>
+<div class="main" style="position:relative">
+  <div id="chat"></div>
+  <!-- Voile de chargement du fil : sans lui, une connexion lente donne un chat
+       VIDE indiscernable d'une conversation vide. Masqué au signal {caught_up}. -->
+  <!-- Loader du fil : la marque « J » d'actelyohub (même glyphe que le favicon et le logo
+       de compactage) en grand, qui pulse. Pas le mot ACTELYO INFERENCE HUB complet. -->
+  <div id="chat-loading" class="show" aria-label="chargement de la conversation" data-i18n="chat.loading_aria" data-i18n-attr="aria-label"><svg id="cl-logo" viewBox="0 0 12 12" aria-hidden="true" fill="currentColor"><rect x="3" y="4" width="2" height="5"/><rect x="7" y="4" width="2" height="5"/><rect x="4" y="3" width="4" height="2"/><rect x="5" y="6" width="2" height="1"/></svg></div>
+  <!-- Accueil : affiché UNIQUEMENT quand le fil est réellement vide (et une fois
+       le replay terminé, sinon il clignoterait au chargement de chaque page).
+       Le logo est cloné depuis #brand au démarrage — une seule source de vérité
+       pour le dessin des lettres. -->
+  <div id="chat-empty" aria-hidden="true">
+    <div id="ce-logo"></div>
+    <!-- Une seule ligne, NEUTRE en genre : l'UI est utilisée par tout le monde,
+         pas de civilité ni d'accord qui obligerait à deviner. -->
+    <div id="ce-title" data-i18n="chat.empty_title">On commence par quoi ?</div>
+  </div>
+  <button id="scrollbtn" onclick="jumpBottom()" title="aller en bas" data-i18n="chat.scroll_bottom_title" data-i18n-attr="title">↓</button>
+  <!-- Voile de dépôt : révélé pendant qu'on survole la fenêtre avec un fichier. -->
+  <div id="dropveil" aria-hidden="true"><div data-i18n="chat.drop_hint">Déposer pour joindre au message</div></div>
+  <div id="composer">
+    <div id="ctxmeta">
+      <div id="ctxtrack"><div id="ctx-fill"></div></div>
+      <span id="status-preset" class="muted" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis"></span>
+      <!-- Pied de carte, à droite : le décompte de contexte, compacter, puis le
+           trombone — tous à la même échelle, c'est une seule ligne d'outils. -->
+      <span style="display:flex;align-items:center;gap:8px;margin-left:auto">
+        <span id="ctx-text" class="muted">0 / 0</span>
+        <span id="ctx-compactions" class="muted" style="display:none;font-size:10px;white-space:nowrap" title="Compactages du contexte dans cette conversation" data-i18n="chat.compactions_title" data-i18n-attr="title"></span>
+        <!-- Raccourci « niveau de réflexion » : n'apparaît que si le preset actif a
+             défini un effort (REASONING_EFFORT). Un clic ouvre un petit menu pour
+             changer le niveau à chaud (pris en compte au prochain message, sans
+             redémarrer le moteur). Gagne la place de l'ancien libellé écrit. -->
+        <button id="reason-btn" onclick="toggleReasonMenu(event)" style="display:none" title="Niveau de réflexion" aria-label="Niveau de réflexion" aria-haspopup="true" data-i18n="chat.reason_level_title" data-i18n-attr="title">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path class="rb" data-l="1" d="M4 20v-3"/><path class="rb" data-l="2" d="M10 20v-7"/><path class="rb" data-l="3" d="M16 20v-11"/><path class="rb" data-l="4" d="M21 20V5"/></svg>
+        </button>
+        <!-- Projets : chaque projet a sa propre mémoire ET ses propres sessions,
+             cloisonnées. Un clic ouvre la modale de sélection/gestion des projets.
+             L'icône (dossier) est doublée du nom du projet actif, tronqué. -->
+        <button id="project-btn" onclick="openProjectHub()" title="Projets (mémoire + conversations cloisonnées)" aria-label="Projets" data-i18n="chat.projects_button_title" data-i18n-attr="title">
+          <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+          <span id="project-btn-name"></span>
+        </button>
+        <!-- Champ fichier caché : déclenché par « Joindre un fichier » du menu + du
+             composeur (le bouton visible « trombone » et « postes distants » ont
+             déménagé dans ce menu, à gauche de la flèche d'envoi). -->
+        <input type="file" id="attach-input" multiple style="display:none" onchange="onAttachPick(event)">
+      </span>
+    </div>
+    <!-- Pièces jointes en attente : remplie par addFiles(), vidée à l'envoi.
+         Petites bulles POSÉES AU-DESSUS de la carte, dans la bande de dégradé
+         qui la sépare du fil — la carte ne bouge donc pas d'un pixel. -->
+    <div id="attach-list"></div>
+    <div id="inputbar">
+      <textarea id="input" rows="1" placeholder="Discuter avec Actelyo" onkeydown="onKey(event)" oninput="autoGrow(this);syncSendBtn()" onpaste="onPaste(event)" data-i18n="chat.input_placeholder" data-i18n-attr="placeholder"></textarea>
+      <!-- Bouton « + » gris : JUSTE à gauche de la flèche d'envoi. Ouvre un petit menu
+           (fichiers + trackers + mémoire). -->
+      <button id="plus-btn" onclick="togglePlusMenu(event)" title="Ajouter" aria-label="Ajouter" aria-haspopup="true" data-i18n="chat.plus_button_title" data-i18n-attr="title"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></button>
+      <button id="send" onclick="send()" title="envoyer" aria-label="envoyer" data-i18n="chat.send_button_title" data-i18n-attr="title"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V6"/><path d="M6 12l6-6 6 6"/></svg></button>
+      <button id="stop" onclick="stopGen()" style="display:none" title="stop" aria-label="stop" data-i18n="chat.stop_button_title" data-i18n-attr="title"><svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor" aria-hidden="true"><rect x="5" y="5" width="14" height="14" rx="2.5"/></svg></button>
+    </div>
+    <div id="sendhint" class="muted" data-i18n="chat.send_hint">Entrée pour envoyer · Maj+Entrée = nouvelle ligne</div>
+  </div>
+</div>
+<!-- Menu du raccourci « niveau de réflexion ». Position fixée par JS (getBoundingClientRect
+     du bouton) et posé DIRECTEMENT sous <body> pour échapper à l'overflow:hidden de la
+     carte du composeur. Chaque ligne écrit l'effort à chaud via /api/reasoning. -->
+<div id="reason-menu" style="display:none">
+  <button data-eff="low" onclick="pickReason('low')">low <span class="rm-h" data-i18n="reason.hint_fast">rapide</span></button>
+  <button data-eff="medium" onclick="pickReason('medium')">medium</button>
+  <button data-eff="high" onclick="pickReason('high')">high</button>
+  <button data-eff="xhigh" onclick="pickReason('xhigh')">xhigh <span class="rm-h" data-i18n="reason.hint_max">max</span></button>
+</div>
+<div id="toast"></div>
+<!-- Modal de bench : structure standard (.modal-ov) pour l'animation d'ouverture/
+     fermeture et la croix commune. z-index:55 en INLINE (au-dessus du modal preset
+     d'où il est lancé, qui est en 30 comme les autres). -->
+<div id="bench-modal" class="modal-ov" style="display:none;z-index:55" onclick="if(event.target===this)closeBenchModal()">
+  <div class="modal-card" style="max-width:480px">
+    <div class="modal-head">
+      <strong data-i18n="bench.title">Benchmark</strong>
+      <button class="modal-x" onclick="closeBenchModal()" aria-label="Fermer" data-i18n="bench.close_aria" data-i18n-attr="aria-label">×</button>
+    </div>
+    <div id="bench-body" class="modal-body" style="display:flex;flex-direction:column;gap:12px"></div>
+    <div class="modal-foot" style="justify-content:flex-end">
+      <button class="pe-btn" onclick="closeBenchModal()" data-i18n="bench.close">fermer</button>
+      <button id="bench-rerun" class="pe-btn primary" onclick="runBenchUI()" data-i18n="bench.rerun">relancer</button>
+    </div>
+  </div>
+</div>
+<div id="ask-modal" class="ask-overlay" style="display:none" onclick="if(event.target===this)askResolve(false)">
+  <div class="ask-box">
+    <div id="ask-title" class="ask-title"></div>
+    <div id="ask-msg" class="ask-msg"></div>
+    <input id="ask-input" class="ask-input" style="display:none">
+    <!-- Variante multiligne du prompt (opts.multiline), ex. décrire un projet. -->
+    <textarea id="ask-textarea" class="ask-input" rows="6" style="display:none;resize:vertical;min-height:120px"></textarea>
+    <!-- Option facultative de la confirmation (ex. « supprimer aussi le .gguf ») :
+         sa place est ICI, dans la boîte qui pose la question, plutôt que dans le
+         pied de l'éditeur où elle occupait de la place en permanence. -->
+    <label id="ask-check" class="pe-delmodel" style="display:none"><input type="checkbox" id="ask-check-input"><span id="ask-check-label"></span></label>
+    <div class="ask-actions">
+      <button id="ask-cancel" onclick="askResolve(false)" data-i18n="modal.cancel">Annuler</button>
+      <button id="ask-ok" class="ask-ok" onclick="askResolve(true)" data-i18n="modal.confirm">Confirmer</button>
+    </div>
+  </div>
+</div>
+<div id="lc-custom-modal" class="modal-ov" style="display:none" onclick="if(event.target===this)closeCustomBackends()">
+  <div class="modal-card" style="max-width:560px">
+    <div class="modal-head">
+      <strong data-i18n="backends.title">Backends personnalisés</strong>
+      <button class="modal-x" onclick="closeCustomBackends()" aria-label="Fermer" data-i18n="backends.close_aria" data-i18n-attr="aria-label">×</button>
+    </div>
+    <div class="modal-body mform">
+      <div class="muted" style="font-size:12px;line-height:1.5" data-i18n="backends.desc" data-i18n-html>Compile un fork de llama.cpp depuis un dépôt Git — pour les modèles qui exigent un moteur spécial (quant ternaire, etc.). Un backend personnalisé <b>ne remplace pas</b> le moteur : vous le choisissez ensuite <b>par modèle</b> (bouton ✎ → section Moteur → « backend détecté »).</div>
+      <div class="fld">
+        <label class="fld-l" data-i18n="backends.installed_label">Installés</label>
+        <div id="lc-custom-list" class="mcp-list"></div>
+      </div>
+      <div class="fld">
+        <label class="fld-l" for="lc-custom-url" data-i18n="backends.install_url_label">Installer depuis un dépôt Git</label>
+        <input id="lc-custom-url" class="ctl" placeholder="https://github.com/owner/llama.cpp-fork">
+      </div>
+      <div class="fld">
+        <label class="fld-l" for="lc-custom-name"><span data-i18n="backends.name_label">Nom</span> <span class="opt" data-i18n="backends.name_optional_hint">(optionnel — déduit de l'URL sinon)</span></label>
+        <input id="lc-custom-name" class="ctl" placeholder="llama.cpp-prism">
+      </div>
+    </div>
+    <div class="modal-foot">
+      <div class="foot-l"></div>
+      <div class="foot-r">
+        <button onclick="closeCustomBackends()" data-i18n="backends.close">fermer</button>
+        <button class="btn-save" onclick="lcInstallCustom()" data-i18n="backends.install_compile">Installer &amp; compiler</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Sessions : chaque conversation est une session persistante à id stable. En
+     ouvrir une la garde dans la liste (la courante est sauvegardée d'abord dans
+     SA session). « nouvelle session » démarre un fil vierge. -->
+<div id="history-modal" class="modal-ov" style="display:none" onclick="if(event.target===this)closeHistoryModal()">
+  <div class="modal-card" style="max-width:560px">
+    <div class="modal-head">
+      <span style="display:flex;align-items:center;gap:8px"><strong data-i18n="sessions.title">Sessions</strong><span id="sess-count" class="sess-count"></span></span>
+      <button class="modal-x" onclick="closeHistoryModal()" aria-label="Fermer" data-i18n="sessions.close_aria" data-i18n-attr="aria-label">×</button>
+    </div>
+    <div class="modal-body mform">
+      <div id="history-list" class="sess-list"></div>
+    </div>
+    <div class="modal-foot">
+      <div class="foot-l"><button id="history-clear-all" class="btn-danger" onclick="clearAllHistory()" data-i18n="sessions.delete_all">tout supprimer (sauf favoris)</button></div>
+      <div class="foot-r">
+        <button onclick="closeHistoryModal()" data-i18n="sessions.close">fermer</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Projets : un projet = une mémoire + des sessions cloisonnées. Sélectionner un
+     projet bascule dessus (nouvelle session vierge, l'ancienne est archivée dans son
+     projet). Créer / renommer / supprimer depuis ici. -->
+<div id="project-modal" class="modal-ov" style="display:none" onclick="if(event.target===this)closeProjectModal()">
+  <div class="modal-card" style="max-width:520px">
+    <div class="modal-head">
+      <span style="display:flex;align-items:center;gap:8px"><strong data-i18n="projects.title">Projets</strong><span id="proj-count" class="sess-count"></span></span>
+      <button class="modal-x" onclick="closeProjectModal()" aria-label="Fermer" data-i18n="projects.close_aria" data-i18n-attr="aria-label">×</button>
+    </div>
+    <div class="modal-body mform">
+      <div class="sess-head" style="display:flex;align-items:center;justify-content:space-between;gap:8px">
+        <span data-i18n="projects.list_heading">Projets</span>
+        <button class="proj-newproj" onclick="createProjectUI()" title="Créer un projet" data-i18n="projects.new_project_title" data-i18n-attr="title"><span data-i18n="projects.new_project_button">+</span></button>
+      </div>
+      <div id="project-list" class="sess-list"></div>
+      <!-- Section Conversations du projet actif, séparée de la grille Projets par un
+           filet en haut. Le bouton « Nouvelle conversation » est à DROITE du titre
+           (même logique que « + projet » à droite de « Projets »), en chip d'accent. -->
+      <div class="sess-head proj-convhead" style="display:flex;align-items:center;justify-content:space-between;gap:8px">
+        <span data-i18n="projects.sessions_heading">Historique</span>
+        <button id="proj-newsess" class="proj-cta accent compact" onclick="newSessionUI()">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+          <span data-i18n="projects.new_session">Nouvelle conversation</span>
+        </button>
+      </div>
+      <!-- Conversations du projet actif (plus de barre « Conversations · … »). -->
+      <div id="project-sessions" class="sess-list" style="margin-top:6px"></div>
+    </div>
+    <div class="modal-foot">
+      <div class="foot-l">
+        <button id="proj-clear-sessions" class="mbtn danger" onclick="clearProjectSessions()" data-i18n="projects.clear_sessions">Vider les conversations</button>
+      </div>
+      <div class="foot-r">
+        <button class="mbtn" onclick="closeProjectModal()" data-i18n="projects.close">Fermer</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="tracker-modal" class="modal-ov" style="display:none" onclick="if(event.target===this)closeTrackerModal()">
+  <div class="modal-card" style="max-width:560px">
+    <div class="modal-head">
+      <span style="display:flex;align-items:center;gap:8px"><strong data-i18n="tracker.modal_title">Trackers</strong><span id="tracker-count" class="sess-count"></span></span>
+      <button class="modal-x" onclick="closeTrackerModal()" aria-label="Fermer" data-i18n="tracker.close_aria" data-i18n-attr="aria-label">×</button>
+    </div>
+    <div class="modal-body mform">
+      <!-- Vue liste : une carte par tracker. -->
+      <div id="tracker-list-view">
+        <div class="tracker-top">
+          <span class="tracker-intro" data-i18n="tracker.modal_intro">Données datées qui s'accumulent (compteurs, relevés, trackers)</span>
+          <button class="tracker-newbtn" onclick="newTrackerUI()" data-i18n="tracker.new_button">+ Nouveau tracker</button>
+        </div>
+        <div id="tracker-list" class="tracker-cards"></div>
+      </div>
+      <!-- Vue détail : héros (valeur du jour) + ajout + frise par année. -->
+      <div id="tracker-detail-view" hidden>
+        <button class="tracker-back" onclick="trackerBack()" data-i18n="tracker.back_button">‹ tous les trackers</button>
+        <div id="tracker-hero" class="tracker-hero"></div>
+        <button class="tracker-newbtn tracker-addpt" onclick="openTrackerPtModal()" data-i18n="tracker.add_point_button">+ Ajouter un point</button>
+        <div id="tracker-events" class="tracker-timeline"></div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <div class="foot-r"><button class="mbtn" onclick="closeTrackerModal()" data-i18n="tracker.close">Fermer</button></div>
+    </div>
+  </div>
+</div>
+<div id="tracker-pt-modal" class="modal-ov" style="display:none" onclick="if(event.target===this)closeTrackerPtModal()">
+  <div class="modal-card" style="max-width:440px">
+    <div class="modal-head">
+      <strong id="tracker-pt-title" data-i18n="tracker.add_point_title">Ajouter un point</strong>
+      <button class="modal-x" onclick="closeTrackerPtModal()" aria-label="Fermer" data-i18n="tracker.pt_close_aria" data-i18n-attr="aria-label">×</button>
+    </div>
+    <div class="modal-body mform">
+      <form class="tracker-form" onsubmit="return false">
+        <textarea id="tracker-text" class="tracker-input" rows="2" placeholder="Valeur ou note (ex. abonnés : 4210)" data-i18n="tracker.pt_text_placeholder" data-i18n-attr="placeholder"></textarea>
+        <div class="tracker-when-wrap">
+          <label class="tracker-fld"><span data-i18n="tracker.date_label">Date</span><input id="tracker-date" type="date"></label>
+          <label class="tracker-fld"><span data-i18n="tracker.time_label">Heure</span><input id="tracker-time" type="time"></label>
+        </div>
+      </form>
+    </div>
+    <div class="modal-foot">
+      <div class="foot-r">
+        <button class="mbtn" onclick="closeTrackerPtModal()" data-i18n="tracker.pt_cancel">Annuler</button>
+        <button id="tracker-add-btn" class="mbtn primary" onclick="trackerAddPoint()" data-i18n="tracker.add">Ajouter</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="mcp-modal" class="modal-ov" style="display:none" onclick="if(event.target===this)closeMcp()">
+  <div class="modal-card" style="max-width:560px">
+    <div class="modal-head">
+      <strong id="mcp-modal-title" data-i18n="mcpmodal.title">Serveur MCP</strong>
+      <button class="modal-x" onclick="closeMcp()" aria-label="Fermer" data-i18n="mcpmodal.close_aria" data-i18n-attr="aria-label">×</button>
+    </div>
+    <div class="modal-body mform">
+      <div class="fld">
+        <label class="fld-l" for="mcp-name"><span data-i18n="mcpmodal.name_label">Nom</span> <span class="opt" data-i18n="mcpmodal.name_hint">(identifiant du serveur, ex: mon-serveur-fichiers)</span></label>
+        <input id="mcp-name" class="ctl" placeholder="mon-serveur">
+      </div>
+      <div class="fld">
+        <label class="fld-l" data-i18n="mcpmodal.transport_label">Transport</label>
+        <div class="seg">
+          <label><input type="radio" name="mcp-transport" value="stdio" onchange="mcpTransportUI('stdio')"><span data-i18n="mcpmodal.transport_stdio">stdio (local)</span></label>
+          <label><input type="radio" name="mcp-transport" value="http" onchange="mcpTransportUI('http')"><span data-i18n="mcpmodal.transport_http">http (distant)</span></label>
+        </div>
+      </div>
+      <div id="mcp-stdio-fields">
+        <div class="fld">
+          <label class="fld-l" for="mcp-command"><span data-i18n="mcpmodal.command_label">Commande</span> <span class="opt" data-i18n="mcpmodal.command_hint">(exécutable, ex: npx, uvx, python)</span></label>
+          <input id="mcp-command" class="ctl" placeholder="npx">
+        </div>
+        <div class="fld">
+          <label class="fld-l" for="mcp-args"><span data-i18n="mcpmodal.args_label">Arguments</span> <span class="opt" data-i18n="mcpmodal.args_hint">(un par ligne)</span></label>
+          <textarea id="mcp-args" class="ctl ta" spellcheck="false" style="min-height:70px" placeholder="-y&#10;@scope/mon-serveur-mcp"></textarea>
+        </div>
+        <div class="fld">
+          <label class="fld-l" for="mcp-env"><span data-i18n="mcpmodal.env_label">Variables d'environnement</span> <span class="opt" data-i18n="mcpmodal.env_hint">(KEY=valeur, une par ligne — optionnel)</span></label>
+          <textarea id="mcp-env" class="ctl ta" spellcheck="false" style="min-height:44px" placeholder="API_TOKEN=xxxx"></textarea>
+        </div>
+      </div>
+      <div id="mcp-http-fields" style="display:none">
+        <div class="fld">
+          <label class="fld-l" for="mcp-url"><span data-i18n="mcpmodal.url_label">URL</span> <span class="opt" data-i18n="mcpmodal.url_hint">(endpoint Streamable HTTP)</span></label>
+          <input id="mcp-url" class="ctl" placeholder="https://exemple.com/mcp">
+        </div>
+        <div class="fld">
+          <label class="fld-l" for="mcp-headers"><span data-i18n="mcpmodal.headers_label">En-têtes</span> <span class="opt" data-i18n="mcpmodal.headers_hint">(Nom: valeur, un par ligne — ex: Authorization: Bearer …)</span></label>
+          <textarea id="mcp-headers" class="ctl ta" spellcheck="false" style="min-height:44px" placeholder="Authorization: Bearer sk-…"></textarea>
+        </div>
+      </div>
+      <div id="mcp-modal-status" class="muted" style="font-size:12px;min-height:16px"></div>
+      <div id="mcp-tools-section" style="display:none">
+        <div class="subhead" style="margin-top:6px"><span data-i18n="mcpmodal.tools_heading">Outils</span> <span id="mcp-tools-count" class="muted" style="text-transform:none;letter-spacing:0;font-weight:400;font-family:var(--font)"></span><span class="help" tabindex="0" onclick="event.preventDefault();event.stopPropagation();this.classList.toggle('open')">?<span class="tip" data-i18n="mcpmodal.tools_help">Décoche un outil pour le masquer à l'IA sans déconnecter le serveur. Utile pour ne garder que ce dont tu as besoin.</span></span></div>
+        <div id="mcp-tools-list" class="mcp-tools-list"></div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <div class="foot-l">
+        <button id="mcp-del" class="btn-danger" onclick="deleteMcp()" style="display:none" data-i18n="mcpmodal.delete">supprimer</button>
+      </div>
+      <div class="foot-r">
+        <button onclick="closeMcp()" data-i18n="mcpmodal.cancel">annuler</button>
+        <button class="btn-save" onclick="saveMcp()" data-i18n="mcpmodal.save">enregistrer</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="mem-modal" class="modal-ov" style="display:none" onclick="if(event.target===this)closeMemHub()">
+  <div class="modal-card mem-card" style="max-width:540px">
+    <div class="modal-head">
+      <span class="mem-head-title"><svg class="mem-head-ic" viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg><strong data-i18n="memory.title">Mémoire</strong><span id="mem-count" class="sess-count"></span><span id="mem-proj" class="mem-proj"></span></span>
+      <button class="modal-x" onclick="closeMemHub()" aria-label="Fermer" data-i18n="memory.close_aria" data-i18n-attr="aria-label">×</button>
+    </div>
+    <div class="modal-body">
+      <div id="mem-block" class="gated-group">
+        <div class="mem-seg" role="radiogroup">
+          <label class="mem-opt">
+            <input type="radio" name="mem-mode-seg" value="always" onchange="setMemMode('always')">
+            <span class="mem-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l9 5-9 5-9-5 9-5z"/><path d="M3 13l9 5 9-5"/></svg></span>
+            <span class="mem-body"><span class="mem-opt-t" data-i18n="memory.mode_inject">Injectée</span><span class="mem-opt-d" data-i18n="memory.mode_inject_hint">l'index est chargé d'avance, l'IA voit ses pages d'emblée</span></span>
+            <span class="mem-radio" aria-hidden="true"></span>
+          </label>
+          <label class="mem-opt">
+            <input type="radio" name="mem-mode-seg" value="search" onchange="setMemMode('search')">
+            <span class="mem-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg></span>
+            <span class="mem-body"><span class="mem-opt-t" data-i18n="memory.mode_search">Recherche</span><span class="mem-opt-d" data-i18n="memory.mode_search_hint">rien d'injecté, l'IA fouille au besoin (prompt léger)</span></span>
+            <span class="mem-radio" aria-hidden="true"></span>
+          </label>
+          <label class="mem-opt">
+            <input type="radio" name="mem-mode-seg" value="ondemand" onchange="setMemMode('ondemand')">
+            <span class="mem-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span>
+            <span class="mem-body"><span class="mem-opt-t" data-i18n="memory.mode_ondemand">Sur demande</span><span class="mem-opt-d" data-i18n="memory.mode_ondemand_hint">la mémoire ne sert que si tu le demandes</span></span>
+            <span class="mem-radio" aria-hidden="true"></span>
+          </label>
+          <label class="mem-opt">
+            <input type="radio" name="mem-mode-seg" value="off" onchange="setMemMode('off')">
+            <span class="mem-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M6 6l12 12"/></svg></span>
+            <span class="mem-body"><span class="mem-opt-t" data-i18n="memory.mode_off">Désactivée</span><span class="mem-opt-d" data-i18n="memory.mode_off_hint">aucun accès mémoire</span></span>
+            <span class="mem-radio" aria-hidden="true"></span>
+          </label>
+        </div>
+        <div class="mem-note muted" data-i18n="memory.mode_perproject">Réglage propre à ce projet.</div>
+        <div class="mem-pages-head">
+          <span class="mem-pages-title"><span data-i18n="memory.pages_heading">Pages mémoire</span></span>
+          <button class="mem-add-btn" onclick="openMem('')" title="ajouter une page mémoire" data-i18n="memory.add_page_title" data-i18n-attr="title"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg><span data-i18n="memory.add_page_button_short">ajouter</span></button>
+        </div>
+        <div id="mem-search-row" style="display:none">
+          <input id="mem-search" class="mem-search sctl" type="search" placeholder="filtrer la mémoire…" oninput="renderMemList()" data-i18n="memory.search_placeholder" data-i18n-attr="placeholder">
+        </div>
+        <div id="mem-list" class="mem-list"></div>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="ext-modal" class="modal-ov" style="display:none" onclick="if(event.target===this)closeExternal()">
+  <div class="modal-card" style="max-width:520px">
+    <div class="modal-head">
+      <strong id="ext-modal-title" data-i18n="external.title">API Externe</strong>
+      <button class="modal-x" onclick="closeExternal()" aria-label="Fermer" data-i18n="external.close_aria" data-i18n-attr="aria-label">×</button>
+    </div>
+    <div class="modal-body mform">
+      <p class="muted" style="font-size:12px;margin:0 0 4px" data-i18n="external.intro">Connecte une IA externe compatible OpenAI Chat Completions (OpenAI, Claude, Groq, OpenRouter…) pour l'utiliser à la place du moteur local.</p>
+      <div class="fld">
+        <label class="fld-l" for="ext-name"><span data-i18n="external.name_label">Nom</span> <span class="opt" data-i18n="external.name_hint">(affiché dans la liste des presets)</span></label>
+        <input id="ext-name" class="ctl" placeholder="OpenRouter · GPT-4o">
+      </div>
+      <div class="fld">
+        <label class="fld-l" for="ext-url"><span data-i18n="external.url_label">URL de l'API</span> <span class="opt" data-i18n="external.url_hint">(base OpenAI, ex: https://api.openai.com/v1)</span></label>
+        <input id="ext-url" class="ctl" spellcheck="false" placeholder="https://api.openai.com/v1">
+      </div>
+      <div class="fld">
+        <label class="fld-l" for="ext-model"><span data-i18n="external.model_label">Modèle</span> <span class="opt" data-i18n="external.model_hint">(identifiant exact, ex: gpt-4o-mini)</span></label>
+        <input id="ext-model" class="ctl" spellcheck="false" placeholder="gpt-4o-mini">
+      </div>
+      <div class="fld">
+        <label class="fld-l" for="ext-key"><span data-i18n="external.key_label">Clé API</span> <span class="opt" data-i18n="external.key_hint">(optionnelle pour un serveur local)</span></label>
+        <input id="ext-key" class="ctl" type="password" autocomplete="off" spellcheck="false" placeholder="sk-…" oninput="extKeyTouched=true">
+      </div>
+      <div class="fld">
+        <label class="fld-l" for="ext-ctx"><span data-i18n="external.ctx_label">Contexte</span> <span class="opt" data-i18n="external.ctx_hint">(taille en tokens, ex: 32768 — laisser vide pour 32768)</span></label>
+        <input id="ext-ctx" class="ctl" type="number" min="0" step="1024" spellcheck="false" placeholder="32768">
+      </div>
+      <label class="switchrow" style="margin:2px 0 0"><span class="switch"><input type="checkbox" id="ext-vision"><span class="slider"></span></span> <span data-i18n="external.vision_label">le modèle accepte les images</span><span class="help" tabindex="0" onclick="event.preventDefault();event.stopPropagation();this.classList.toggle('open')">?<span class="tip" data-i18n="external.vision_help" data-i18n-html>coche si le modèle distant est <b>multimodal</b> (vision). Les images jointes lui sont alors envoyées pour qu'il les voie, et il peut charger une image du disque avec son outil dédié. À laisser décoché pour un modèle texte seul.</span></span></label>
+      <div id="ext-modal-status" class="muted" style="font-size:12px;min-height:0"></div>
+    </div>
+    <div class="modal-foot">
+      <div class="foot-l">
+        <button id="ext-del" class="btn-danger" onclick="deleteExternal()" style="display:none" data-i18n="external.delete">supprimer</button>
+      </div>
+      <div class="foot-r">
+        <button class="pe-btn" onclick="testExternal()" data-i18n="external.test">tester la connexion</button>
+        <button class="pe-btn primary" onclick="saveExternal()" data-i18n="external.save">enregistrer</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="task-modal" class="modal-ov" style="display:none" onclick="if(event.target===this)closeTask()">
+  <div class="modal-card">
+    <div class="modal-head">
+      <strong id="task-modal-title" data-i18n="task.title">Tâche planifiée</strong>
+      <button class="modal-x" onclick="closeTask()" aria-label="Fermer" data-i18n="task.close_aria" data-i18n-attr="aria-label">×</button>
+    </div>
+    <div class="pe-body">
+      <div id="task-result-block" class="pe-group" style="display:none">
+        <div class="pe-gh"><span data-i18n="task.last_result">Dernier résultat</span> <span id="task-result-when" class="pe-sub" style="display:inline;margin:0"></span></div>
+        <div id="task-result" class="task-report"></div>
+      </div>
+
+      <div class="pe-group">
+        <div class="pe-gh" data-i18n="task.name_heading">Nom</div>
+        <div class="pe-list">
+          <div class="pe-row stack plain"><input id="task-name" class="pe-inp" placeholder="Nom de la tâche" data-i18n="task.name_placeholder" data-i18n-attr="placeholder"></div>
+        </div>
+      </div>
+
+      <div class="pe-group">
+        <div class="pe-gh" data-i18n="task.type_heading">Type</div>
+        <div class="pe-seg">
+          <label><input type="radio" name="task-kind" value="agent" onchange="setTaskKind('agent')"><span data-i18n="task.type_agent">Consigne IA</span></label>
+          <label><input type="radio" name="task-kind" value="script" onchange="setTaskKind('script')"><span data-i18n="task.type_script">Script seul</span></label>
+        </div>
+        <div class="pe-note" id="task-kind-note" data-i18n="task.type_note">Consigne IA : le modèle exécute une instruction. Script seul : lance un script enregistré, sans IA ni consommation de tokens.</div>
+      </div>
+
+      <div class="pe-group" id="task-prompt-group">
+        <div class="pe-gh" data-i18n="task.prompt_heading">Consigne</div>
+        <textarea id="task-prompt" class="pe-inp task-consigne" spellcheck="false" placeholder="Ce que l'IA doit faire, et comment livrer le résultat.&#10;&#10;Tu peux détailler librement : contexte, étapes, format du compte-rendu attendu…" data-i18n="task.prompt_placeholder" data-i18n-attr="placeholder"></textarea>
+      </div>
+
+      <div class="pe-group" id="task-script-group" style="display:none">
+        <div class="pe-gh" data-i18n="task.script_heading">Script</div>
+        <div class="pe-list">
+          <div class="pe-row">
+            <span class="pe-row-l" data-i18n="task.script_run_label">Script à lancer</span>
+            <span class="pe-row-c"><span class="pe-selc"><select id="task-script"></select></span></span>
+          </div>
+        </div>
+        <div class="pe-note" data-i18n="task.script_note" data-i18n-html>Les scripts vivent dans le dossier protégé <code>scripts</code>, à l'abri d'un nettoyage du workspace.</div>
+      </div>
+
+      <div class="pe-group" id="task-preset-group">
+        <div class="pe-gh" data-i18n="task.preset_heading">Preset</div>
+        <div class="pe-list">
+          <div class="pe-row">
+            <span class="pe-row-l" data-i18n="task.preset_model_label">Modèle utilisé</span>
+            <span class="pe-row-c"><span class="pe-selc"><select id="task-preset"></select></span></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="pe-group">
+        <div class="pe-gh" data-i18n="task.freq_heading">Fréquence</div>
+        <div class="pe-seg">
+          <label><input type="radio" name="task-freq-mode" value="interval" onchange="taskFreqUI('interval')"><span data-i18n="task.freq_interval">Intervalle</span></label>
+          <label><input type="radio" name="task-freq-mode" value="cron" onchange="taskFreqUI('cron')"><span data-i18n="task.freq_cron">Horaire précis</span></label>
+        </div>
+        <div class="pe-list" style="margin-top:8px">
+          <div id="task-interval-fields" class="pe-row">
+            <span class="pe-row-l" data-i18n="task.freq_every">Toutes les</span>
+            <span class="pe-row-c">
+              <input id="task-interval-n" class="pe-val" type="number" min="1" value="2" style="width:54px">
+              <span class="pe-selc"><select id="task-interval-unit" onchange="taskUnitUI()">
+                <option value="m" data-i18n="task.freq_unit_minutes">minutes</option>
+                <option value="h" selected data-i18n="task.freq_unit_hours">heures</option>
+                <option value="d" data-i18n="task.freq_unit_days">jours</option>
+              </select></span>
+            </span>
+          </div>
+          <div id="task-time-row" class="pe-row" style="display:none">
+            <span class="pe-row-l" data-i18n="task.freq_at">À</span>
+            <span class="pe-row-c"><input id="task-time" class="pe-val" type="time" value="09:00" style="width:110px"></span>
+          </div>
+          <div id="task-cron-fields" class="pe-row stack" style="display:none">
+            <input id="task-cron" class="pe-inp" placeholder="0 9 * * 1-5" spellcheck="false" style="font-family:var(--mono)">
+            <div class="pe-note" data-i18n="task.cron_hint" data-i18n-html><code>minute heure jour mois jour-semaine</code></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="pe-group" id="task-access-group">
+        <div class="pe-gh" data-i18n="task.access_heading">Accès</div>
+        <div class="pe-list">
+          <div class="pe-row">
+            <span class="pe-row-l" data-i18n="task.access_memory">Accès à la mémoire</span>
+            <span class="pe-row-c"><label class="pe-switch"><input type="checkbox" id="task-mem" checked><span class="pe-sl"></span></label></span>
+          </div>
+          <div class="pe-row" id="task-project-row">
+            <span class="pe-row-l"><span data-i18n="task.access_project_memory">Mémoire du projet</span><span class="pe-sub" data-i18n="task.access_project_memory_sub">la tâche lit/écrit dans la mémoire de ce projet</span></span>
+            <span class="pe-row-c"><span class="pe-selc"><select id="task-project"></select></span></span>
+          </div>
+          <div class="pe-row">
+            <span class="pe-row-l" data-i18n="task.access_web">Accès au web</span>
+            <span class="pe-row-c"><label class="pe-switch"><input type="checkbox" id="task-web" checked><span class="pe-sl"></span></label></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="pe-group">
+        <div class="pe-list">
+          <div class="pe-row">
+            <span class="pe-row-l" data-i18n="task.enabled_label">Tâche active</span>
+            <span class="pe-row-c"><label class="pe-switch"><input type="checkbox" id="task-enabled" checked><span class="pe-sl"></span></label></span>
+          </div>
+        </div>
+      </div>
+
+      <div id="task-modal-status" class="pe-seg-note" style="padding:0 6px"></div>
+    </div>
+    <div class="pe-foot">
+      <div class="foot-l">
+        <button id="task-del" class="pe-del" onclick="deleteTaskUI()" title="supprimer" aria-label="supprimer" style="display:none" data-i18n="task.delete_title" data-i18n-attr="title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M8 6V4a1 1 0 011-1h6a1 1 0 011 1v2"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/></svg></button>
+      </div>
+      <div class="foot-r">
+        <button id="task-run" class="pe-btn" onclick="runTaskNow()" style="display:none" data-i18n="task.run_now">tester maintenant</button>
+        <button class="pe-btn" onclick="closeTask()" data-i18n="task.cancel">annuler</button>
+        <button class="pe-btn primary" onclick="saveTask()" data-i18n="task.save">enregistrer</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="modal" class="modal-ov" style="display:none">
+  <div class="modal-card">
+    <div class="modal-head">
+      <strong id="modal-title" data-i18n="preset.title">Preset</strong>
+      <button class="modal-x" onclick="closeModal()" aria-label="Fermer" data-i18n="preset.close_aria" data-i18n-attr="aria-label">×</button>
+    </div>
+    <!-- Chargement : la modale s'ouvre tout de suite, mais son contenu n'arrive
+         qu'après (jusqu'à 3 requêtes en accès distant). Ce voile se pose PAR-DESSUS
+         le formulaire, qui reste en place (invisible) : la carte garde sa taille
+         finale, donc pas de saut au moment où le contenu apparaît. -->
+    <div class="modal-load"><span class="spinner"></span></div>
+    <div class="pe-body">
+      <div class="pe-group">
+        <div class="pe-gh" data-i18n="preset.name_heading">Nom</div>
+        <div class="pe-list">
+          <div class="pe-row stack plain"><input id="m-name" class="pe-inp" placeholder="Nom du preset" data-i18n="preset.name_placeholder" data-i18n-attr="placeholder"></div>
+        </div>
+      </div>
+
+      <!-- Moteur (backend llama-server) : tout en haut du modal, juste après le nom. -->
+      <div id="m-engine-row" class="pe-group" style="display:none">
+        <div class="pe-gh" data-i18n="preset.engine_heading">Moteur</div>
+        <div class="pe-seg">
+          <label><input type="radio" name="m-be" value="fast" onchange="onBackendMode('fast')"><span data-i18n="preset.engine_fast">Précompilé</span><span class="be-note" id="be-fast-note"></span></label>
+          <label><input type="radio" name="m-be" value="opt" onchange="onBackendMode('opt')"><span data-i18n="preset.engine_opt">Compilé</span><span class="be-note" id="be-opt-note"></span></label>
+          <label><input type="radio" name="m-be" value="custom" onchange="onBackendMode('custom')"><span data-i18n="preset.engine_custom">Personnalisé</span></label>
+        </div>
+        <div id="be-avail-note" class="be-avail-note" style="display:none"></div>
+        <!-- Avertissement moteur non installé : visible et explicite (au lieu d'une
+             simple notif fugace), avec un bouton qui ouvre la section Moteur et lance
+             l'installation guidée. -->
+        <div id="be-warn" class="be-warn" style="display:none">
+          <div id="be-warn-text" class="be-warn-t"></div>
+          <button type="button" class="be-warn-btn" onclick="beWarnInstall()" data-i18n="preset.engine_warn_install_btn">Installer le moteur</button>
+        </div>
+        <div id="m-backend-custom" class="pe-list" style="display:none;margin-top:8px">
+          <div class="pe-row">
+            <span class="pe-row-l" data-i18n="preset.backend_label">Backend</span>
+            <span class="pe-row-c"><span class="pe-selc"><select id="m-backend-detected" onchange="onPickDetected()"></select></span></span>
+          </div>
+          <div class="pe-row stack">
+            <input id="m-backend-path" class="pe-inp" oninput="onCustomPath()" placeholder="ou un chemin vers llama-server(.exe)" data-i18n="preset.backend_path_placeholder" data-i18n-attr="placeholder">
+            <div class="pe-note" id="be-drop-hint"></div>
+          </div>
+        </div>
+      </div>
+
+      <div id="m-model-row" style="display:none;flex-direction:column;gap:26px">
+        <div class="pe-group">
+          <div class="pe-gh" data-i18n="preset.model_heading">Modèle</div>
+          <div class="pe-list">
+            <div class="pe-row stack">
+              <span class="pe-row-l" data-i18n="preset.model_file_label">Fichier</span>
+              <span class="pe-selc wide"><select id="m-model" onchange="onPickModel()"></select></span>
+            </div>
+            <div class="pe-row">
+              <span class="pe-row-l"><span data-i18n="preset.quant_label">Quantization</span><span class="pe-sub" data-i18n="preset.quant_sub">auto si vide</span></span>
+              <span class="pe-row-c"><input id="m-quant" class="pe-val" oninput="applyQuant()" placeholder="Auto" data-i18n="preset.quant_auto_placeholder" data-i18n-attr="placeholder"></span>
+            </div>
+            <div class="pe-row">
+              <span class="pe-row-l"><span data-i18n="preset.vision_label">Vision</span><span class="pe-sub" data-i18n="preset.vision_sub">projecteur mmproj</span></span>
+              <span class="pe-row-c"><span class="pe-selc"><select id="m-mmproj" onchange="onPickMmproj()"></select></span></span>
+            </div>
+            <div class="pe-row" id="s-mmproj-cpu-row">
+              <span class="pe-row-l"><span data-i18n="preset.mmproj_cpu_label">Projecteur vision sur le CPU</span><span class="pe-sub" data-i18n="preset.mmproj_cpu_sub">garde le mmproj hors du GPU — libère de la VRAM (--no-mmproj-offload)</span></span>
+              <span class="pe-row-c"><label class="pe-switch"><input type="checkbox" id="s-mmproj-cpu" onchange="eaToggleFlag('--no-mmproj-offload', this.checked)"><span class="pe-sl"></span></label></span>
+            </div>
+            <div class="pe-row stack">
+              <span class="pe-row-l"><span data-i18n="preset.download_model_label">Télécharger un modèle</span> <span class="pe-sub" data-i18n="preset.download_model_sub">ou un projecteur mmproj — lien direct vers un .gguf</span></span>
+              <div class="pe-inpbtn">
+                <input id="m-hf-url" class="pe-inp" placeholder="https://…/model.gguf">
+                <button id="m-hf-btn" onclick="startDownload()" title="Télécharger" data-i18n="preset.download_button_title" data-i18n-attr="title">↓</button>
+              </div>
+              <div id="m-hf-bar" class="pe-bar" style="display:none"><i></i></div>
+              <div id="m-hf-progress" class="pe-note" style="display:none"></div>
+              <button id="m-hf-cancel" class="pe-link" onclick="cancelDownload()" style="display:none" data-i18n="preset.download_cancel">Annuler le téléchargement</button>
+            </div>
+            <div class="pe-row">
+              <span class="pe-row-l" data-i18n="preset.destination_label">Destination</span>
+              <span class="pe-selc"><select id="m-hf-dir"></select></span>
+            </div>
+            <div id="m-dirs-toggle" class="pe-row" style="cursor:pointer" onclick="toggleModelDirs()">
+              <span class="pe-row-l"><span data-i18n="preset.model_dirs_label">Dossiers de modèles</span><span class="pe-sub" data-i18n="preset.model_dirs_sub">chercher les .gguf ailleurs (disque externe…)</span></span>
+              <span class="pe-row-c"><span id="m-dirs-caret" class="pe-caret"></span></span>
+            </div>
+            <div id="m-dirs-body" class="pe-row stack" style="display:none">
+              <div id="m-dirs-list" class="pe-note"></div>
+              <div class="pe-inpbtn">
+                <input id="m-dir-path" class="pe-inp" placeholder="/media/disque-externe/models">
+                <button id="m-dir-add" onclick="addModelDir()" title="Ajouter ce dossier" data-i18n="preset.model_dir_add_title" data-i18n-attr="title">+</button>
+              </div>
+              <div class="pe-note" data-i18n="preset.model_dirs_note">Ces dossiers servent aussi de destination de téléchargement.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Cartes graphiques : la liste vient du moteur (déplacé tout en haut du modal),
+             car les noms ET l'ordre dépendent du backend compilé dedans. Le
+             groupe reste masqué tant qu'on n'a pas AU MOINS DEUX cartes : avec
+             une seule, il n'y a rien à arbitrer. -->
+        <div class="pe-group" id="m-gpu-group" hidden>
+          <div class="pe-gh" data-i18n="preset.gpu_heading">Cartes graphiques</div>
+          <div class="pe-list" id="m-gpu-list"></div>
+          <div class="pe-note" id="m-gpu-note"></div>
+        </div>
+      </div>
+
+      <!-- Une seule liste : les anciens « réglages avancés » repliés sont
+           désormais à la suite. Les valeurs d'abord, puis TOUS les interrupteurs
+           groupés en fin de liste — chercher un toggle perdu entre deux champs
+           numériques n'aidait personne. -->
+      <div id="m-settings-row" class="pe-group" style="display:none">
+        <div class="pe-gh" data-i18n="preset.settings_heading">Réglages</div>
+        <div class="pe-list">
+          <div class="pe-row">
+            <span class="pe-row-l" data-i18n="preset.ctx_label">Contexte</span>
+            <span class="pe-row-c"><input id="s-ctx" class="pe-val" type="number" min="0" step="1024" placeholder="32768" oninput="cfgWriteKey('CTX', this.value)"><span class="pe-unit">tok</span></span>
+          </div>
+          <div class="pe-row">
+            <span class="pe-row-l"><span data-i18n="preset.ngl_label">Couches sur GPU</span><span class="pe-sub" data-i18n="preset.ngl_sub">999 = tout sur le GPU</span></span>
+            <span class="pe-row-c"><input id="s-ngl" class="pe-val" type="number" min="0" step="1" placeholder="999" oninput="cfgWriteKey('NGL', this.value)"></span>
+          </div>
+          <div class="pe-row">
+            <span class="pe-row-l"><span data-i18n="preset.moe_label">Experts MoE sur CPU</span><span class="pe-sub" data-i18n="preset.moe_sub">vide = non</span></span>
+            <span class="pe-row-c"><input id="s-moe" class="pe-val" type="number" min="0" step="1" placeholder="—" oninput="eaSetValued('--n-cpu-moe', this.value)"></span>
+          </div>
+          <div class="pe-row">
+            <span class="pe-row-l"><span data-i18n="preset.threads_label">Threads CPU</span><span class="pe-sub" data-i18n="preset.threads_sub">0 = auto</span></span>
+            <span class="pe-row-c"><input id="s-threads" class="pe-val" type="number" min="0" step="1" placeholder="0" oninput="cfgWriteKey('THREADS', this.value)"></span>
+          </div>
+          <div class="pe-row">
+            <span class="pe-row-l"><span data-i18n="preset.threads_batch_label">Threads (batch)</span><span class="pe-sub" data-i18n="preset.threads_batch_sub">0 = auto</span></span>
+            <span class="pe-row-c"><input id="s-tbatch" class="pe-val" type="number" min="0" step="1" placeholder="0" oninput="cfgWriteKey('THREADS_BATCH', this.value)"></span>
+          </div>
+          <div class="pe-row">
+            <span class="pe-row-l" data-i18n="preset.batch_label">BATCH</span>
+            <span class="pe-row-c"><input id="s-batch" class="pe-val" type="number" min="0" step="256" placeholder="2048" oninput="cfgWriteKey('BATCH', this.value)"></span>
+          </div>
+          <div class="pe-row">
+            <span class="pe-row-l" data-i18n="preset.ubatch_label">UBATCH</span>
+            <span class="pe-row-c"><input id="s-ubatch" class="pe-val" type="number" min="0" step="128" placeholder="512" oninput="cfgWriteKey('UBATCH', this.value)"></span>
+          </div>
+          <div class="pe-row">
+            <span class="pe-row-l"><span data-i18n="preset.np_label">Séquences parallèles</span><span class="pe-sub" data-i18n="preset.np_sub">1 = recommandé · &gt;1 multiplie le cache KV (-np)</span></span>
+            <span class="pe-row-c"><input id="s-np" class="pe-val" type="number" min="1" step="1" placeholder="1" oninput="eaSetValued('-np', this.value)"></span>
+          </div>
+          <div class="pe-row">
+            <span class="pe-row-l"><span data-i18n="preset.kv_label">Cache KV</span><span class="pe-sub" data-i18n="preset.kv_sub">compression du contexte — % = précision (tail 99,9%)</span></span>
+            <span class="pe-row-c"><span class="pe-selc"><select id="s-kv" onchange="kvSetCombo(this.value)">
+              <option value="" data-i18n="preset.kv_opt_f16">f16 — max qualité (100%)</option>
+              <option value="q8_0|q8_0" data-i18n="preset.kv_opt_q8">q8_0 — léger (94,6%)</option>
+              <option value="q4_0|q4_0" data-i18n="preset.kv_opt_q4">q4_0 — très léger (89,8%)</option>
+              <option value="q5_1|q5_1" data-i18n="preset.kv_opt_q51">q5_1 (92,8%)</option>
+              <optgroup label="Combos K / V (K &gt; V)" data-i18n="preset.kv_optgroup_combos" data-i18n-attr="label">
+                <option value="q8_0|q5_1" data-i18n="preset.kv_combo_1">q8_0 / q5_1 (94,2%)</option>
+                <option value="q8_0|q5_0" data-i18n="preset.kv_combo_2">q8_0 / q5_0 (93,7%)</option>
+                <option value="q5_0|q4_1" data-i18n="preset.kv_combo_3">q5_0 / q4_1 (92,7%)</option>
+                <option value="q5_0|q4_0" data-i18n="preset.kv_combo_4">q5_0 / q4_0 (91,4%)</option>
+              </optgroup>
+            </select></span></span>
+          </div>
+          <!-- Décodage spéculatif : le type vient de la liste que llama-server
+               accepte pour --spec-type. Le nombre de jetons anticipés
+               (--spec-draft-n-max) n'a de sens qu'une fois un type choisi, donc
+               sa ligne n'apparaît qu'à ce moment. -->
+          <div class="pe-row">
+            <span class="pe-row-l"><span data-i18n="preset.spec_label">Décodage spéculatif</span><span class="pe-sub" data-i18n="preset.spec_sub">anticipe des jetons pour accélérer</span></span>
+            <span class="pe-row-c"><span class="pe-selc"><select id="s-spec" onchange="onSpecType()">
+              <option value="" data-i18n="preset.spec_opt_none">non</option>
+              <optgroup label="Modèle brouillon" data-i18n="preset.spec_optgroup_draft" data-i18n-attr="label">
+                <option value="draft-mtp" data-i18n="preset.spec_opt_mtp">MTP</option>
+                <option value="draft-eagle3" data-i18n="preset.spec_opt_eagle3">EAGLE-3</option>
+                <option value="draft-simple" data-i18n="preset.spec_opt_simple">modèle brouillon séparé</option>
+                <option value="draft-dflash" data-i18n="preset.spec_opt_dflash">dFlash</option>
+                <option value="draft-dspark" data-i18n="preset.spec_opt_dspark">dSpark</option>
+              </optgroup>
+              <optgroup label="N-grammes (sans modèle brouillon)" data-i18n="preset.spec_optgroup_ngram" data-i18n-attr="label">
+                <option value="ngram-simple" data-i18n="preset.spec_opt_ngram_simple">n-grammes</option>
+                <option value="ngram-mod" data-i18n="preset.spec_opt_ngram_mod">n-grammes (mod)</option>
+                <option value="ngram-cache" data-i18n="preset.spec_opt_ngram_cache">n-grammes (cache)</option>
+                <option value="ngram-map-k" data-i18n="preset.spec_opt_ngram_mapk">n-grammes (map-k)</option>
+                <option value="ngram-map-k4v" data-i18n="preset.spec_opt_ngram_mapk4v">n-grammes (map-k4v)</option>
+              </optgroup>
+            </select></span></span>
+          </div>
+          <!-- Modèle de draft : apparaît pour tous les types à brouillon (draft-*).
+               Obligatoire pour EAGLE-3/dFlash/dSpark/modèle séparé, OPTIONNEL pour
+               MTP (souvent intégré au modèle). Masqué pour les n-grammes / « aucun ». -->
+          <div class="pe-row" id="s-spec-draft-row" style="display:none">
+            <span class="pe-row-l"><span data-i18n="preset.spec_draft_label">Modèle de draft</span><span class="pe-sub" data-i18n="preset.spec_draft_sub">le brouillon qui anticipe</span></span>
+            <span class="pe-row-c"><span class="pe-selc"><select id="m-spec-draft" onchange="onPickSpecDraft()"></select></span></span>
+          </div>
+          <div class="pe-row" id="s-spec-n-row" style="display:none">
+            <span class="pe-row-l"><span data-i18n="preset.spec_n_label">Jetons anticipés</span><span class="pe-sub" data-i18n="preset.spec_n_sub">par étape — défaut 3</span></span>
+            <span class="pe-row-c"><input id="s-spec-n" class="pe-val" type="number" min="1" step="1" placeholder="3" oninput="eaSetValued('--spec-draft-n-max', this.value)"></span>
+          </div>
+          <div class="pe-row">
+            <span class="pe-row-l"><span data-i18n="preset.reasoning_label">Raisonnement</span><span class="pe-sub" id="s-reasoning-sub" data-i18n="preset.reasoning_sub">réflexion étape par étape</span></span>
+            <span class="pe-row-c"><label class="pe-switch"><input type="checkbox" id="s-reasoning" onchange="cfgWriteKey('REASONING', this.checked?'on':'off')"><span class="pe-sl"></span></label></span>
+          </div>
+          <div class="pe-row">
+            <span class="pe-row-l"><span data-i18n="preset.flash_label">Flash attention</span><span class="pe-sub" data-i18n="preset.flash_sub">plus rapide, moins de VRAM</span></span>
+            <span class="pe-row-c"><label class="pe-switch"><input type="checkbox" id="s-flash" onchange="eaSetValued('--flash-attn', this.checked?'on':'')"><span class="pe-sl"></span></label></span>
+          </div>
+          <div class="pe-row">
+            <span class="pe-row-l"><span data-i18n="preset.mlock_label">Garder en RAM</span><span class="pe-sub" data-i18n="preset.mlock_sub">évite le swap (mlock)</span></span>
+            <span class="pe-row-c"><label class="pe-switch"><input type="checkbox" id="s-mlock" onchange="eaToggleMem()"><span class="pe-sl"></span></label></span>
+          </div>
+          <div class="pe-row">
+            <span class="pe-row-l"><span data-i18n="preset.nommap_label">Charger tout en mémoire</span><span class="pe-sub" data-i18n="preset.nommap_sub">désactive le mmap</span></span>
+            <span class="pe-row-c"><label class="pe-switch"><input type="checkbox" id="s-nommap" onchange="eaToggleMem()"><span class="pe-sl"></span></label></span>
+          </div>
+          <div class="pe-row">
+            <span class="pe-row-l"><span data-i18n="preset.kvunified_label">Cache KV unifié</span><span class="pe-sub" data-i18n="preset.kvunified_sub">un seul cache partagé (--kv-unified)</span></span>
+            <span class="pe-row-c"><label class="pe-switch"><input type="checkbox" id="s-kvunified" onchange="eaToggleFlag('--kv-unified', this.checked)"><span class="pe-sl"></span></label></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Échantillonnage : ces valeurs sont envoyées à CHAQUE requête (pas au
+           lancement du moteur), c'est le seul endroit où elles prennent effet.
+           Vide = on n'envoie rien, llama-server garde son défaut. Les valeurs
+           recommandées dépendent du modèle (ex. Qwen3.8 en thinking : temp 1.0,
+           top_p 0.95, top_k 20, min_p 0). -->
+      <div id="m-sampling-row" class="pe-group" style="display:none">
+        <div class="pe-gh" data-i18n="preset.sampling_heading">Échantillonnage</div>
+        <div class="pe-list">
+          <div id="m-sampling-toggle" class="pe-row" style="cursor:pointer" onclick="toggleSampling()">
+            <span class="pe-row-l"><span data-i18n="preset.sampling_toggle_label">Réglages d'échantillonnage</span><span class="pe-sub" data-i18n="preset.sampling_toggle_sub">température, top_p, pénalités… (défaut du modèle si vide)</span></span>
+            <span class="pe-row-c"><span id="m-sampling-caret" class="pe-caret"></span></span>
+          </div>
+          <div id="m-sampling-body">
+          <div class="pe-row">
+            <span class="pe-row-l"><span data-i18n="preset.temp_label">Température</span><span class="pe-sub" data-i18n="preset.temp_sub">vide = défaut du modèle</span></span>
+            <span class="pe-row-c"><input id="s-temp" class="pe-val" type="number" min="0" step="0.05" placeholder="—" oninput="cfgWriteKey('TEMP', this.value)"></span>
+          </div>
+          <div class="pe-row">
+            <span class="pe-row-l"><span data-i18n="preset.topp_label">top_p</span><span class="pe-sub" data-i18n="preset.topp_sub">noyau de probabilité</span></span>
+            <span class="pe-row-c"><input id="s-topp" class="pe-val" type="number" min="0" max="1" step="0.01" placeholder="—" oninput="cfgWriteKey('TOP_P', this.value)"></span>
+          </div>
+          <div class="pe-row">
+            <span class="pe-row-l"><span data-i18n="preset.topk_label">top_k</span><span class="pe-sub" data-i18n="preset.topk_sub">0 = désactivé</span></span>
+            <span class="pe-row-c"><input id="s-topk" class="pe-val" type="number" min="0" step="1" placeholder="—" oninput="cfgWriteKey('TOP_K', this.value)"></span>
+          </div>
+          <div class="pe-row">
+            <span class="pe-row-l"><span data-i18n="preset.minp_label">min_p</span><span class="pe-sub" data-i18n="preset.minp_sub">seuil de probabilité</span></span>
+            <span class="pe-row-c"><input id="s-minp" class="pe-val" type="number" min="0" max="1" step="0.01" placeholder="—" oninput="cfgWriteKey('MIN_P', this.value)"></span>
+          </div>
+          <div class="pe-row">
+            <span class="pe-row-l"><span data-i18n="preset.presence_label">Pénalité de présence</span><span class="pe-sub" data-i18n="preset.presence_sub">pousse vers de nouveaux mots (0 = off)</span></span>
+            <span class="pe-row-c"><input id="s-presp" class="pe-val" type="number" min="0" max="2" step="0.1" placeholder="—" oninput="cfgWriteKey('PRESENCE_PENALTY', this.value)"></span>
+          </div>
+          <div class="pe-row">
+            <span class="pe-row-l"><span data-i18n="preset.repeat_label">Pénalité de répétition</span><span class="pe-sub" data-i18n="preset.repeat_sub">anti-répétition (1 = neutre)</span></span>
+            <span class="pe-row-c"><input id="s-reppen" class="pe-val" type="number" min="0" step="0.05" placeholder="—" oninput="cfgWriteKey('REPEAT_PENALTY', this.value)"></span>
+          </div>
+          <div class="pe-row">
+            <span class="pe-row-l"><span data-i18n="preset.effort_label">Effort de réflexion</span><span class="pe-sub" data-i18n="preset.effort_sub">ajoute --jinja automatiquement</span></span>
+            <span class="pe-row-c"><span class="pe-selc"><select id="s-effort" onchange="onEffort(this.value)">
+              <option value="" data-i18n="preset.effort_opt_default">défaut du modèle</option>
+              <option value="low" data-i18n="preset.effort_opt_low">low (rapide)</option>
+              <option value="medium" data-i18n="preset.effort_opt_medium">medium</option>
+              <option value="high" data-i18n="preset.effort_opt_high">high</option>
+              <option value="xhigh" data-i18n="preset.effort_opt_xhigh">xhigh (max)</option>
+            </select></span></span>
+          </div>
+          </div><!-- /m-sampling-body -->
+        </div>
+      </div>
+
+      <!-- Prompt système PROPRE À CE PRESET (optionnel). Replié par défaut. Injecté
+           en tête du contexte quand ce preset est actif. -->
+      <div id="m-sys-row" class="pe-group" style="display:none">
+        <div class="pe-gh" data-i18n="preset.sysprompt_heading">System prompt</div>
+        <div class="pe-list">
+          <div id="m-sys-toggle" class="pe-row" style="cursor:pointer" onclick="toggleSysPrompt()">
+            <span class="pe-row-l"><span data-i18n="preset.sysprompt_toggle_label">Prompt système du preset</span><span class="pe-sub" data-i18n="preset.sysprompt_toggle_sub">optionnel — injecté quand ce preset est actif</span></span>
+            <span class="pe-row-c"><span id="m-sys-caret" class="pe-caret"></span></span>
+          </div>
+          <div id="m-sys-body" class="pe-row stack" style="display:none">
+            <textarea id="m-sysprompt" class="pe-inp" spellcheck="false" placeholder="(optionnel) ex : tu es un assistant concis en français" data-i18n="preset.sysprompt_placeholder" data-i18n-attr="placeholder"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <div id="m-raw" class="pe-group">
+        <div class="pe-gh" id="m-raw-head" data-i18n="preset.raw_heading">Configuration</div>
+        <div class="pe-list">
+          <div id="m-raw-toggle" class="pe-row" style="cursor:pointer" onclick="toggleRaw()">
+            <span class="pe-row-l"><span data-i18n="preset.raw_toggle_label">Éditer le fichier de configuration</span><span class="pe-sub" data-i18n="preset.raw_toggle_sub">texte brut</span></span>
+            <span class="pe-row-c"><span id="m-raw-caret" class="pe-caret"></span></span>
+          </div>
+          <div id="m-raw-body" class="pe-row stack" style="display:none">
+            <textarea id="m-content" class="pe-inp" spellcheck="false"></textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Pied compact, sur UNE ligne : la suppression est une icône (action rare et
+         destructrice, elle n'a pas à peser autant que « enregistrer »), et sa case
+         « supprimer aussi le .gguf » se réduit à l'extension, le libellé complet
+         restant en infobulle. -->
+    <div class="pe-foot">
+      <div class="foot-l">
+        <button id="m-del" class="pe-del" onclick="delItem()" title="supprimer" aria-label="supprimer" data-i18n="preset.delete_title" data-i18n-attr="title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M8 6V4a1 1 0 011-1h6a1 1 0 011 1v2"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/></svg></button>
+        <!-- Bench : mesure le modèle CHARGÉ, n'a donc de sens que pour le preset
+             actif. openItem l'affiche seulement dans ce cas (voir 07-models.js). -->
+        <button id="btn-bench" class="pe-icon" onclick="runBenchUI()" style="display:none" title="Benchmark" aria-label="Benchmark" data-i18n="bench.title" data-i18n-attr="title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 13.5l3.6-3.6"/><path d="M4.6 19a9 9 0 1 1 14.8 0"/><circle cx="12" cy="13.5" r="1.3" fill="currentColor" stroke="none"/></svg></button>
+      </div>
+      <div class="foot-r">
+        <button class="pe-btn" onclick="closeModal()" data-i18n="preset.cancel">annuler</button>
+        <button class="pe-btn primary" onclick="saveItem()" data-i18n="preset.save">enregistrer</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="marked.min.js"></script>
+<script>
+@@JS@@
+</script></body></html>

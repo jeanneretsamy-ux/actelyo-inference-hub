@@ -1,0 +1,37 @@
+{
+  "FixedFileInfo": {
+    "FileVersion": {
+      "Major": 0,
+      "Minor": 14,
+      "Patch": 9,
+      "Build": 0
+    },
+    "ProductVersion": {
+      "Major": 0,
+      "Minor": 14,
+      "Patch": 9,
+      "Build": 0
+    },
+    "FileFlagsMask": "3f",
+    "FileFlags": "00",
+    "FileOS": "040004",
+    "FileType": "01",
+    "FileSubType": "00"
+  },
+  "StringFileInfo": {
+    "CompanyName": "ACTELYO INFERENCE HUB contributors",
+    "FileDescription": "ACTELYO INFERENCE HUB — gestionnaire mono-binaire de serveurs llama.cpp auto-hébergés",
+    "InternalName": "actelyohub",
+    "LegalCopyright": "Copyright (c) 2026 ACTELYO INFERENCE HUB contributors. MIT License.",
+    "OriginalFilename": "actelyohub.exe",
+    "ProductName": "ACTELYO INFERENCE HUB",
+    "ProductVersion": "0.14.9",
+    "Comments": "https://github.com/jeanneretsamy-ux/actelyo-inference-hub — projet open source (MIT)"
+  },
+  "VarFileInfo": {
+    "Translation": {
+      "LangID": "040C",
+      "CharsetID": "04B0"
+    }
+  }
+}

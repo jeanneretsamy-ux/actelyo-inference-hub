@@ -2,7 +2,7 @@ Prise en charge des images avec les modèles distants, retrait de la gestion des
 
 ## Images et modèles multimodaux via une API externe
 
-Un preset « API externe » (modèle servi par une API compatible OpenAI, y compris un autre serveur AJEAN) peut désormais être déclaré multimodal, via une case « le modèle accepte les images » dans sa fenêtre de configuration. Quand elle est cochée, les images jointes à un message sont envoyées au modèle distant pour qu'il les voie, et l'outil de vision (chargement d'une image du disque) lui est proposé. Auparavant, seul un projecteur multimodal local pouvait activer la vision : un modèle distant pourtant capable de voir se voyait refuser les images.
+Un preset « API externe » (modèle servi par une API compatible OpenAI, y compris un autre serveur ACTELYO INFERENCE HUB) peut désormais être déclaré multimodal, via une case « le modèle accepte les images » dans sa fenêtre de configuration. Quand elle est cochée, les images jointes à un message sont envoyées au modèle distant pour qu'il les voie, et l'outil de vision (chargement d'une image du disque) lui est proposé. Auparavant, seul un projecteur multimodal local pouvait activer la vision : un modèle distant pourtant capable de voir se voyait refuser les images.
 
 ## Images jointes utilisables, pas seulement visibles
 
@@ -14,7 +14,7 @@ Une image dont le plus grand côté dépasse 1568 pixels est réduite avant d'ê
 
 ## Retrait de la gestion des postes distants
 
-La fonctionnalité permettant à l'IA d'un serveur de piloter un autre PC (postes distants) a été entièrement retirée : commandes, réglages, outils, interface et documentation associés. L'accès à distance à une machine passe désormais uniquement par sa connexion à ajean.link.
+La fonctionnalité permettant à l'IA d'un serveur de piloter un autre PC (postes distants) a été entièrement retirée : commandes, réglages, outils, interface et documentation associés. L'accès à distance à une machine passe désormais uniquement par sa connexion à inference.actelyo.example.
 
 ## Téléchargement des fichiers au nom contenant une apostrophe
 
@@ -22,4 +22,4 @@ Un fichier renvoyé par l'IA dont le nom comportait à la fois des espaces et un
 
 ## Mise à jour
 
-    ajean update
+    actelyohub update
