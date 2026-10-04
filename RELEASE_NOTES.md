@@ -1,7 +1,5 @@
-# ACTELYO INFERENCE HUB 0.16.0
+# ACTELYO INFERENCE HUB 0.16.1
 
-Add a local LM Studio sampling optimizer with two rounds of synthetic checks, measured end-to-end throughput, authenticated asynchronous jobs, cancellation and reversible preset changes. A failed profile cannot be recommended. Applying a profile synchronizes the hub context with the actual loaded model; no model downloads, unloading, GPU or parallelism changes occur.
+Keep unavailable optimizer actions hidden despite the shared button display styles. Ineligible or failed comparisons show only the comparison action and their actual error; apply and restore are offered only when their state permits them.
 
-The new sidebar panel displays progress and a confirmed applied/restored state. The ACTELYO ERP Law Harness integration uses the same API and keeps its management key in session memory. Quality checks cover arithmetic, JSON extraction and missing information, not legal accuracy.
-
-The Windows LegalYA launcher preserves existing preset sampling and context.
+Retain 0.16.0 local measured sampling optimization, configuration snapshots and Law Harness integration. Quality failures never authorize automatic application.

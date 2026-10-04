@@ -1843,3 +1843,6 @@ button:hover{border-color:var(--dim);color:var(--text)}
 #ce-logo img{width:40px;height:40px;object-fit:contain;display:block}
 #cl-logo{width:64px;height:64px;object-fit:contain}
 .genstatus img.jlogo{object-fit:contain}
+
+/* Button display rules must not expose unavailable optimizer actions. */
+#optimizer-panel [hidden] { display: none !important; }

@@ -3,13 +3,13 @@
     "FileVersion": {
       "Major": 0,
       "Minor": 16,
-      "Patch": 0,
+      "Patch": 1,
       "Build": 0
     },
     "ProductVersion": {
       "Major": 0,
       "Minor": 16,
-      "Patch": 0,
+      "Patch": 1,
       "Build": 0
     },
     "FileFlagsMask": "3f",
@@ -25,9 +25,9 @@
     "LegalCopyright": "Copyright (c) 2026 ACTELYO INFERENCE HUB contributors. MIT License.",
     "OriginalFilename": "actelyohub.exe",
     "ProductName": "ACTELYO INFERENCE HUB",
-    "ProductVersion": "0.16.0",
+    "ProductVersion": "0.16.1",
     "Comments": "https://github.com/jeanneretsamy-ux/actelyo-inference-hub \u00e2\u20ac\u201d projet open source (MIT)",
-    "FileVersion": "0.16.0"
+    "FileVersion": "0.16.1"
   },
   "VarFileInfo": {
     "Translation": {
