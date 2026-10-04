@@ -147,9 +147,22 @@ func newWebMux() *http.ServeMux {
 		w.Write(b)
 	})
 	// api enregistre une route /api/* protégée par la clé de pilotage (web_auth.go).
-	api := func(path string, h http.HandlerFunc) { mux.HandleFunc(path, requireWebAuth(h)) }
+	api := func(path string, h http.HandlerFunc) {
+		mux.HandleFunc(path, requireWebAuth(func(w http.ResponseWriter, r *http.Request) {
+			if r.Method != http.MethodGet && path != "/api/optimizer/cancel" && optimizerBusy() {
+				sendJSON(w, 409, map[string]any{"ok": false, "error": "Comparaison en cours. Attendez sa fin ou annulez-la avant de modifier le hub."})
+				return
+			}
+			h(w, r)
+		}))
+	}
 	api("/api/ping", handlePing)
 	api("/api/status", handleStatus)
+	api("/api/optimizer", handleOptimizer)
+	api("/api/optimizer/run", handleOptimizerRun)
+	api("/api/optimizer/cancel", handleOptimizerCancel)
+	api("/api/optimizer/apply", handleOptimizerApply)
+	api("/api/optimizer/restore", handleOptimizerRestore)
 	api("/api/service/log", handleServiceLog) // journal du service pour diagnostiquer un modèle qui ne charge pas
 	api("/api/vram", handleVram)
 	api("/api/ram", handleRam)
