@@ -1,5 +1,3 @@
-# ACTELYO INFERENCE HUB 0.15.1
+# ACTELYO INFERENCE HUB 0.15.2
 
-Replace the old agent glyphs with the official Actelyo symbol from ACTELYO ERP across the favicon, loading screen, chat header, generation status, notifications, PWA, desktop icon, tray and Windows splash.
-
-Local model configuration and saved conversations are preserved.
+Fix a JavaScript identifier damaged by rebranding that prevented the entire browser interface from starting. Add full generated-page and source-script syntax validation to CI. Preserve Actelyo logos, model settings and conversations.

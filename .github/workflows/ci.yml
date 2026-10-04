@@ -10,6 +10,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Validate complete browser JavaScript
+        run: node scripts/check-ui.mjs
+      - name: Validate browser authentication concurrency
+        run: node --test scripts/test-ui-auth.mjs
       - uses: actions/setup-go@v5
         with:
           go-version-file: go.mod

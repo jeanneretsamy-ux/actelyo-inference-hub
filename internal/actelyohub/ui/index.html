@@ -5597,6 +5597,7 @@ const API_TIMEOUT_MS = 30000;
 async function jfetch(u, opts){
   opts = opts || {};
   opts.headers = authHeaders(opts.headers);
+  const sentAuthorization = opts.headers.Authorization || '';
   if(u.charAt(0) === '/') u = API_BASE + u;
   let timer=null;
   if(!opts.signal){
@@ -5611,6 +5612,12 @@ async function jfetch(u, opts){
     throw e;
   }
   finally{ if(timer) clearTimeout(timer); }
+  // A parallel request may return its old 401 after another request has already
+  // accepted a new key. Retry that current key before reopening the modal.
+  if(r.status === 401 && TOKEN && sentAuthorization !== 'Bearer '+TOKEN){
+    opts.headers = authHeaders(opts.headers);
+    r = await fetch(u, opts);
+  }
   if(r.status === 401){
     const k = await askKeyOnce();
     if(k){ opts.headers = authHeaders(opts.headers); r = await fetch(u, opts); }
@@ -10167,7 +10174,7 @@ async function deleteMcp(){
 // abonnement, puis renvoie une clé de liaison par postMessage. On la POSTe à
 // l'agent local (/api/link/connect) qui fait le `actelyohub link` (token + service).
 
-const ACTELYO INFERENCE HUB_APP_ORIGIN = 'https://app.inference.actelyo.example';
+const ACTELYO_HUB_APP_ORIGIN = 'https://app.inference.actelyo.example';
 
 function renderRemote(d){
   const off = document.getElementById('remote-off'), on = document.getElementById('remote-on');
@@ -10223,13 +10230,13 @@ async function loadRemote(){
 // Ouvre la popup de connexion et attend la clé renvoyée par postMessage.
 function remoteConnect(){
   const params = new URLSearchParams({ origin: window.location.origin, host: window.location.hostname || t('remote.this_server') });
-  const url = ACTELYO INFERENCE HUB_APP_ORIGIN + '/connect.html?' + params.toString();
+  const url = ACTELYO_HUB_APP_ORIGIN + '/connect.html?' + params.toString();
   const pop = window.open(url, 'actelyohub-connect', 'width=440,height=640');
   if(!pop){ toast(t('remote.allow_popups')); return; }
 
   async function onMsg(ev){
     // Anti-usurpation : n'accepte QUE des messages du portail inference.actelyo.example.
-    if(ev.origin !== ACTELYO INFERENCE HUB_APP_ORIGIN) return;
+    if(ev.origin !== ACTELYO_HUB_APP_ORIGIN) return;
     const d = ev.data || {};
     if(d.type !== 'actelyohub-link' || !d.token) return;
     window.removeEventListener('message', onMsg);
