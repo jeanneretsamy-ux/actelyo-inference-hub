@@ -15,6 +15,8 @@ jobs:
           node-version: '24'
       - name: Validate complete browser JavaScript
         run: node scripts/check-ui.mjs
+      - name: Validate browser authentication concurrency
+        run: node --test scripts/test-ui-auth.mjs
       - uses: actions/setup-go@v5
         with:
           go-version-file: go.mod
