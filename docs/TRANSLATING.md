@@ -1,7 +1,7 @@
-# Translating ajean's UI
+# Translating actelyohub's UI
 
 The web UI has no external translation service and no build-time dependency
-beyond Go — every string lives in one file, `internal/ajean/ui/src/js/00a-i18n-data.js`,
+beyond Go — every string lives in one file, `internal/actelyohub/ui/src/js/00a-i18n-data.js`,
 as a plain JavaScript object: one block per language, same keys in every
 block, French (`fr`) is the source of truth.
 
@@ -20,7 +20,7 @@ en: {
 ```
 
 You do **not** need to touch any other file, and you do **not** need to know
-Go, JavaScript, or how ajean's UI is built, to translate. You do need a text
+Go, JavaScript, or how actelyohub's UI is built, to translate. You do need a text
 editor and, ideally, someone with the Go toolchain to build and check in the
 result for you if you can't run the commands below yourself (see "Building
 and previewing" at the end).
@@ -118,8 +118,8 @@ hadn't gotten to yet, that's the tool doing its job — go translate it.
 If you have Go installed:
 
 ```bash
-go generate ./internal/ajean   # rebuilds internal/ajean/ui/index.html from src/
-go build ./cmd/ajean           # rebuilds the ajean binary with your translation baked in
+go generate ./internal/actelyohub   # rebuilds internal/actelyohub/ui/index.html from src/
+go build ./cmd/actelyohub           # rebuilds the actelyohub binary with your translation baked in
 ```
 
 Run the resulting binary, open the web UI, and pick your language from the

@@ -1,4 +1,4 @@
-// verify-i18n checks internal/ajean/ui/src/js/00a-i18n-data.js for completeness:
+// verify-i18n checks internal/actelyohub/ui/src/js/00a-i18n-data.js for completeness:
 // every language block must have exactly the same set of keys as fr (the
 // source language). Run it after editing a translation, before opening a PR.
 //
@@ -28,7 +28,7 @@ import (
 	"sort"
 )
 
-const dataFile = "internal/ajean/ui/src/js/00a-i18n-data.js"
+const dataFile = "internal/actelyohub/ui/src/js/00a-i18n-data.js"
 
 // Matches "lang: {" at the start of a language block, and a top-level "key": "value" line.
 var reLangStart = regexp.MustCompile(`(?m)^(\w+):\s*\{\s*$`)

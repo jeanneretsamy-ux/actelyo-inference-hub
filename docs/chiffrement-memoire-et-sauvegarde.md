@@ -1,11 +1,11 @@
-# Chiffrement de la mémoire + sauvegarde ajean.link
+# Chiffrement de la mémoire + sauvegarde inference.actelyo.example
 
 Plan d'implémentation de référence. À lire avant d'écrire du code. Deux
 nouveautés qui partagent la même fondation cryptographique :
 
 1. **Chiffrer la mémoire** (les pages `memory/*.md`), en option, réversible,
    pour abonnés comme non-abonnés.
-2. **Sauvegarder** la mémoire, les presets et tous les réglages sur ajean.link,
+2. **Sauvegarder** la mémoire, les presets et tous les réglages sur inference.actelyo.example,
    de façon que le relais ne voie jamais rien (auto-périodique + manuel).
 
 La règle qui prime sur tout le reste :
@@ -25,7 +25,7 @@ La règle qui prime sur tout le reste :
   reconnecté une fois. Accepté (un client repasse quasi toujours très vite).
 - **Confiance uniquement dans l'app + le mot de passe utilisateur.** Pas de
   dépendance au TPM ni au keystore de l'OS.
-- **Marche sans ajean link.** Le secret ne peut donc PAS être la racine E2E `R`
+- **Marche sans actelyohub link.** Le secret ne peut donc PAS être la racine E2E `R`
   (qui n'existe que sur le chemin relais/abonné). En accès local/LAN, l'auth est
   un simple Bearer `web_key` côté serveur, sans secret dérivé du mot de passe.
 - **Le relais est hostile par hypothèse.** Il peut être piraté. Il ne doit
@@ -68,13 +68,13 @@ Points clés :
 
 > Note d'implémentation (écart assumé au plan initial) : le NOM de fichier ne
 > change pas (toujours `foo.md`). C'est le CONTENU qui est chiffré en place,
-> précédé d'un magic `AJEANMEMv1` qui rend chaque fichier auto-descriptif. Ça
+> précédé d'un magic `ACTELYO_HUBMEMv1` qui rend chaque fichier auto-descriptif. Ça
 > évite de toucher au listing, à la recherche et à la validation de chemins, et
 > la détection clair/chiffré se fait sur le contenu, pas sur l'extension. Aussi
 > sûr, moins de surface de bug. Le reste de cette section décrit l'intention ;
 > le code (mem_crypto.go, mem_io.go) fait foi.
 
-Sous `$AJEAN_HOME/memory/` :
+Sous `$ACTELYO_HUB_HOME/memory/` :
 
 - `*.md` : une page. Si chiffrée : `magic || nonce || AES-256-GCM(contenu)`. Le
   nom reste en clair (nécessaire pour lister/chercher sans déverrouiller). Le
@@ -99,7 +99,7 @@ Sous `$AJEAN_HOME/memory/` :
 
 Redondance du keyvault (point de défaillance unique) : **trois copies
 indépendantes** tenues synchronisées, chacune suffisante seule :
-`memory/.keyvault`, une copie dans `$AJEAN_HOME/`, une dans `ajean.db`.
+`memory/.keyvault`, une copie dans `$ACTELYO_HUB_HOME/`, une dans `actelyohub.db`.
 
 Réglage : clé `MEM_ENCRYPTED` dans la config (comme `MEM_MODE`).
 
@@ -156,7 +156,7 @@ proprement**. Jamais d'état bâtard.
 
 ### Snapshots locaux versionnés (filet pour tous, abonnés ou non)
 Copies automatiques des N derniers états de `memory/` (ciphertext + keyvault)
-sous `$AJEAN_HOME/backups/`. Un bug qui corromprait les fichiers courants se
+sous `$ACTELYO_HUB_HOME/backups/`. Un bug qui corromprait les fichiers courants se
 rejoue en un clic depuis un snapshot antérieur, sans être abonné.
 
 ### Détection et refus de nuire
@@ -173,7 +173,7 @@ sauvegarde relais, clé de récupération confirmée.
 
 ---
 
-## 6. Sauvegarde ajean.link (relais aveugle)
+## 6. Sauvegarde inference.actelyo.example (relais aveugle)
 
 Le relais ne stocke que de l'opaque, par construction.
 
@@ -211,24 +211,24 @@ Auto-périodique (quotidien et/ou sur changement significatif) + bouton
 ## 7. Fichiers touchés (côté Go)
 
 Nouveau :
-- `internal/ajean/mem_crypto.go` : DEK/KEK, Argon2id, wrap/unwrap, AES-GCM,
+- `internal/actelyohub/mem_crypto.go` : DEK/KEK, Argon2id, wrap/unwrap, AES-GCM,
   auto-test, format `.md.enc` et `.keyvault`.
-- `internal/ajean/mem_vault.go` : keyvault (3 copies synchronisées, wraps,
+- `internal/actelyohub/mem_vault.go` : keyvault (3 copies synchronisées, wraps,
   clé de récupération, valeur témoin, révocation).
-- `internal/ajean/mem_migrate.go` : activation/désactivation vérifiées +
+- `internal/actelyohub/mem_migrate.go` : activation/désactivation vérifiées +
   journal `.migration` + reprise.
-- `internal/ajean/mem_snapshots.go` : snapshots locaux versionnés + restauration.
-- `internal/ajean/backup_bundle.go` : construction/restauration du blob.
-- `internal/ajean/relay_backup.go` : client des endpoints relais.
+- `internal/actelyohub/mem_snapshots.go` : snapshots locaux versionnés + restauration.
+- `internal/actelyohub/backup_bundle.go` : construction/restauration du blob.
+- `internal/actelyohub/relay_backup.go` : client des endpoints relais.
 - Côté `jean-relay` (autre dépôt) : stockage de blobs par compte.
 
 Modifié :
-- `internal/ajean/chat_memory.go` : `MemList`/`MemContent`/`MemSave`/`MemRead`/
+- `internal/actelyohub/chat_memory.go` : `MemList`/`MemContent`/`MemSave`/`MemRead`/
   `MemSearch`/`MemAdd`/`MemEdit`/`MemDelete` passent par une couche transparente
   `readMem`/`writeMem` (chiffre/déchiffre à la volée quand `MEM_ENCRYPTED`).
-- `internal/ajean/web_api.go` : endpoints déverrouillage (réception DEK scellée),
+- `internal/actelyohub/web_api.go` : endpoints déverrouillage (réception DEK scellée),
   activation/désactivation, santé mémoire, déclenchement/restauration sauvegarde.
-- `internal/ajean/relay_e2e.go` / `relay_e2eauth.go` : réutiliser le canal scellé
+- `internal/actelyohub/relay_e2e.go` / `relay_e2eauth.go` : réutiliser le canal scellé
   pour transporter la DEK au déverrouillage (abonnés).
 - UI (`ui/src/`) : mot de passe mémoire, toggle chiffrer/déchiffrer, case
   « réutiliser mon mot de passe app », affichage/confirmation de la clé de
