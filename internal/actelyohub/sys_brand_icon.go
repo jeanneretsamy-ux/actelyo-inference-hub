@@ -59,6 +59,7 @@ func encodePNG(img *image.RGBA) []byte {
 func BrandIconPNG(n int) []byte { return encodePNG(brandIconImage(n, brandBlack, brandWhite)) }
 
 // brandTemplatePNG uses the symbol alpha for the macOS menu bar.
+//
 //lint:ignore U1000 utilisée par sys_tray_darwin.go, invisible sans CGO/macOS
 func brandTemplatePNG(n int) []byte {
 	return encodePNG(brandIconImage(n, brandBlack, brandClear))
