@@ -2033,6 +2033,21 @@ button:hover{border-color:var(--dim);color:var(--text)}
     <label class="switchrow"><span class="switch"><input type="checkbox" id="view-hide-preset" onchange="toggleView('hide-preset')"><span class="slider"></span></span> <span data-i18n="appearance.hide_preset">masquer le nom du preset</span><span class="help" tabindex="0" onclick="event.preventDefault();event.stopPropagation();this.classList.toggle('open')">?<span class="tip" data-i18n="appearance.hide_preset_help" data-i18n-html>Retire le nom du preset de la ligne d'état sous chaque réponse (durée, tokens, vitesse). Les autres informations restent affichées.</span></span></label>
     </div>
   </details>
+  <details id="optimizer-panel" ontoggle="if(this.open)refreshOptimizer()"><summary><span class="stitle">Optimisation Law Harness</span></summary>
+    <div class="slist"><div class="rowbody">
+      <p class="muted">Compare les températures du modèle LM Studio local. Aucun téléchargement ni rechargement du modèle. Les tests fictifs ne certifient pas la qualité juridique.</p>
+      <select id="optimizer-objective" class="sctl" aria-label="Priorité de l'optimisation"><option value="balanced">Précision et vitesse</option><option value="speed">Vitesse avec vérifications</option></select>
+      <div class="row" style="flex-wrap:wrap;margin-top:12px">
+        <button id="optimizer-run" class="mbtn" onclick="optimizerAction('run')">Comparer les profils</button>
+        <button id="optimizer-apply" class="mbtn" onclick="optimizerAction('apply')" hidden>Appliquer le profil</button>
+        <button id="optimizer-restore" class="mbtn" onclick="optimizerAction('restore')" hidden>Restaurer</button>
+        <button id="optimizer-cancel" class="mbtn" onclick="optimizerAction('cancel')" hidden>Annuler les tests</button>
+      </div>
+      <p id="optimizer-progress" role="status" aria-live="polite">Ouvrez ce panneau pour lire le rapport.</p>
+      <pre id="optimizer-results" style="white-space:pre-wrap;font-size:12px"></pre>
+      <p id="optimizer-warning" class="muted"></p>
+    </div></div>
+  </details>
   <details><summary><span class="stitle" data-i18n="api.title">API</span></summary>
     <div class="subhead"><span data-i18n="api.endpoint_subhead">Endpoint compatible OpenAI</span><span class="help" tabindex="0" onclick="event.preventDefault();event.stopPropagation();this.classList.toggle('open')">?<span class="tip" data-i18n="api.endpoint_help" data-i18n-html>Branchez n'importe quel client compatible OpenAI (OpenCode, Continue, Cursor…) sur ces adresses. Si une clé est définie, le client doit envoyer <code>Authorization: Bearer &lt;clé&gt;</code>.</span></span></div>
     <!-- UNE carte pour tout l'endpoint : adresse locale, bascule « public » et
@@ -11913,5 +11928,45 @@ async function deleteTrackerPoint(e){
   if(!r.ok){ toast(r.error||t('tracker.delete_point_failed')); return; }
   if(TRACKER_EDIT && TRACKER_EDIT.id===e.id) trackerClearForm();
   renderTrackerEvents();
+}
+let optimizerPollTimer = null;
+let optimizerActionPending = false;
+function renderOptimizer(report) {
+  const running = report.state === 'running';
+  document.getElementById('optimizer-run').disabled = running || !!report.can_restore || optimizerActionPending;
+  document.getElementById('optimizer-objective').disabled = running || optimizerActionPending;
+  document.getElementById('optimizer-apply').hidden = report.state !== 'completed' || report.recommended < 0 || report.applied;
+  document.getElementById('optimizer-restore').hidden = !report.can_restore;
+  document.getElementById('optimizer-cancel').hidden = !running;
+  for (const action of ['apply', 'restore', 'cancel']) document.getElementById('optimizer-'+action).disabled = optimizerActionPending;
+  document.getElementById('optimizer-progress').textContent = report.error || report.progress || 'Prêt à comparer les profils du modèle chargé.';
+  const rows = (report.profiles || []).map((p,i) => `${p.name}${i === report.recommended ? ' ✓ recommandé' : ''} : température ${p.temperature} · ${p.passed}/6 vérifications · ${p.tokens_per_second.toFixed(1)} tokens/s`);
+  if (report.context) rows.unshift(`Modèle : ${report.model}\nContexte réel : ${report.context} tokens · concurrence ${report.parallel}\nRAM libre avant tests : ${report.free_ram_mb} Mo\n`);
+  document.getElementById('optimizer-results').textContent = rows.join('\n');
+  document.getElementById('optimizer-warning').textContent = report.warning || '';
+  clearTimeout(optimizerPollTimer);
+  if (running && document.getElementById('optimizer-panel').open) optimizerPollTimer = setTimeout(refreshOptimizer, 3000);
+}
+async function refreshOptimizer() {
+  try { renderOptimizer(await jget('/api/optimizer')); }
+  catch (err) { document.getElementById('optimizer-progress').textContent = 'Suivi interrompu : '+err.message; }
+}
+async function optimizerAction(action) {
+  if (optimizerActionPending) return;
+  optimizerActionPending = true;
+  for (const name of ['run','apply','restore','cancel']) document.getElementById('optimizer-'+name).disabled = true;
+  document.getElementById('optimizer-progress').textContent = 'Action en cours…';
+  try {
+    const payload = action === 'run' ? {objective:document.getElementById('optimizer-objective').value} : {};
+    const result = await jpost('/api/optimizer/'+action, payload);
+    if (result.ok === false) throw new Error(result.error || 'Action refusée');
+    optimizerActionPending = false;
+    await refreshOptimizer();
+    if (action === 'apply' || action === 'restore') await loadCfg();
+  } catch (err) {
+    optimizerActionPending = false;
+    await refreshOptimizer();
+    document.getElementById('optimizer-progress').textContent = 'Action impossible : '+err.message;
+  }
 }
 </script></body></html>

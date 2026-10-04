@@ -10,7 +10,7 @@ import (
 	"strings"
 )
 
-const Version = "0.15.2"
+const Version = "0.16.0"
 
 // Main est le vrai main() du binaire (cmd/actelyohub ne fait que l'appeler).
 func Main() {
