@@ -37,6 +37,10 @@ func handleLinkStatus(w http.ResponseWriter, r *http.Request) {
 // handleLinkConnect (POST /api/link/connect {token}) : enregistre la clé de
 // liaison remise par la popup connect.html et (re)démarre le service de lien.
 func handleLinkConnect(w http.ResponseWriter, r *http.Request) {
+	if relayURL() == "" {
+		sendJSON(w, http.StatusServiceUnavailable, map[string]any{"error": "aucun relais ACTELYO configuré"})
+		return
+	}
 	var req struct{ Token string }
 	_ = json.NewDecoder(r.Body).Decode(&req)
 	tok := strings.TrimSpace(req.Token)

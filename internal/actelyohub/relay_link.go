@@ -154,6 +154,9 @@ func cmdLink(args []string) error {
 		printLinkHelp()
 		return fmt.Errorf("sous-commande link inconnue: %s", sub)
 	}
+	if relayURL() == "" {
+		return fmt.Errorf("aucun relais configuré : définir ACTELYO_HUB_LINK_URL")
+	}
 	if err := saveLinkToken(strings.TrimSpace(sub)); err != nil {
 		return err
 	}
